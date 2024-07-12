@@ -624,8 +624,8 @@ namespace ana
 
                 if(std::isnan(val) || std::isinf(val)){
                   std::cerr << "Warning: Bad value: " << val
-                            << " returned from a Var. The input variable(s) could "
-                            << "be NaN in the CAF, or perhaps your "
+                            << " returned from Var: " << varname 
+                            << " The input variable(s) could be NaN in the CAF, or perhaps your "
                             << "Var code computed 0/0?";
                   std::cout << " Still filling into the ''branch'' for this slice." << std::endl;
                 }
@@ -685,8 +685,8 @@ namespace ana
 
           if(std::isnan(val) || std::isinf(val)){
             std::cerr << "Warning: Bad value: " << val
-                      << " returned from a Var. The input variable(s) could "
-                      << "be NaN in the CAF, or perhaps your "
+                      << " returned from Var: " << varname
+                      << " The input variable(s) could be NaN in the CAF, or perhaps your "
                       << "Var code computed 0/0?";
             std::cout << " Still filling into the ''branch'' for this slice." << std::endl;
           }
@@ -765,8 +765,8 @@ namespace ana
 
                 if(std::isnan(truthval) || std::isinf(truthval)){
                   std::cerr << "Warning: Bad value: " << truthval
-                            << " returned from a Var. The input variable(s) could "
-                            << "be NaN in the CAF, or perhaps your "
+                            << " returned from TruthVar: " << truthvarname
+                            << " The input variable(s) could be NaN in the CAF, or perhaps your "
                             << "Var code computed 0/0?";
                   std::cout << " Still filling into the ''branch'' for this slice." << std::endl;
                 }
