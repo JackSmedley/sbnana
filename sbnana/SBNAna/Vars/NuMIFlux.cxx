@@ -237,8 +237,7 @@ namespace ana {
 
   double NuMIPpfxFluxWeightG3Chase::GetWeightFromSRTrueInt(const caf::SRTrueInteractionProxy* nu, const bool applyKaonRW) const
   {
-    //if (nu->index < 0 || abs(nu->initpdg) == 16) return 1.0;
-    if (nu->index < 0 || abs(nu->initpdg) == 16) return 0.71074118;
+    if (nu->index < 0 || abs(nu->initpdg) == 16) return 1.0;
 
     /// Choose 1 1 1 for the G3Chase weight check since the 0 0 0 is meaningless here...
     if (!fWeight[0][0][0] || !fWeightG3Chase[1][1][1]) {

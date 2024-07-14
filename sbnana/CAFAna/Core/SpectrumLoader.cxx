@@ -783,46 +783,45 @@ namespace ana
                   recordVals["Evt/i"].push_back( sr->hdr.evt );
                 }
               }
-              // Adding CutType
 
-              if ( treemapIt->first->SaveTruthCutType() ){
-                // Loop over reco slices, and check if the truth-matched slice pass the (Slice)Cut
-
-                bool HasMatchedSlicePassCut = false;
+              // Adding reco cut selection
+              if ( treemapIt->first->SaveTruthCutType() ) {
                 double MatchedSlice_systWeight = 1.;
-                for ( auto& slc : sr->slc ) {
-                  if ( slc.truth.index < 0 ) continue;
-                  else if ( slc.truth.index != nu.index ) continue;
-
-                  // Here we should shift "Slice-based" Systs
-                  // E.g., Calo syst
-
-                  caf::SRProxySystController::BeginTransaction();
-                  double slice_systWeight = 1;
-                  // Can special-case nominal to not pay cost of Shift()
-                  if(!shift.IsNominal()){
-                    shift.Shift(&slc, slice_systWeight);
+                // Loop over reco slices, and check if the truth-matched slice pass the (Slice)Cut
+                for ( unsigned int i_cut = 0; i_cut < treemapIt->first->NSelectionCuts(); i_cut++ ) {
+                  bool HasMatchedSlicePassCut = false;
+                  std::string thisCutLabel = treemapIt->first->GetSelectionLabel(i_cut);
+                  for ( auto& slc : sr->slc ) {
+                    if ( slc.truth.index < 0 ) continue;
+                    else if ( slc.truth.index != nu.index ) continue;
+  
+                    // Here we should shift "Slice-based" Systs
+                    // E.g., Calo syst
+  
+                    caf::SRProxySystController::BeginTransaction();
+                    double slice_systWeight = 1;
+                    // Can special-case nominal to not pay cost of Shift()
+                    if(!shift.IsNominal()){
+                      shift.Shift(&slc, slice_systWeight);
+                    }
+                    bool PassSignalSelectionCut = treemapIt->first->GetSelectionCut(i_cut)(&slc);
+                    caf::SRProxySystController::Rollback();
+  
+                    if( PassSignalSelectionCut ){
+                      HasMatchedSlicePassCut = true;
+                      MatchedSlice_systWeight = slice_systWeight;
+                      break;
+                    }
                   }
-                  bool PassSignalSelectionCut = treemapIt->first->GetSignalSelectionCut()(&slc);
-                  caf::SRProxySystController::Rollback();
-
-                  if( PassSignalSelectionCut ){
-                    HasMatchedSlicePassCut = true;
-                    MatchedSlice_systWeight = slice_systWeight;
-                    break;
-                  }
-                }
-                int tmp_CutType = HasMatchedSlicePassCut ? 1 : 0;
-                recordVals["CutType/i"].push_back( tmp_CutType );
-
+                  int tmp_CutType = HasMatchedSlicePassCut ? 1 : 0;
+                  recordVals[thisCutLabel+"/i"].push_back( tmp_CutType );
+                }  
                 int tmp_SpillCutType = spillpass ? 1 : 0;
                 recordVals["SpillCutType/i"].push_back( tmp_SpillCutType );
-
+ 
+                // Return the shift from the last passing combination of slice and reco cut (if any) 
                 recordVals["RecoShiftWeight"].push_back( MatchedSlice_systWeight );
-
               }
-
-
 
               treemapIt->first->UpdateEntries(recordVals);
               //idxTree+=1;

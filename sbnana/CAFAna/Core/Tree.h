@@ -43,13 +43,15 @@ namespace ana
     /// Dedicated for signal efficiency, thus has slightly different behavior
     /// - spillcut: It does not cut event by spillcut, but creates a branch "SpillCutType"
     /// - truthcut: Signal definition is defined here. Only the TrueInteraction (=nu) that satisfies truthcut will be filled
-    /// - SignalSelection: Reco cut that defined your signal selection. 
-    ///   For each nu, it loops over reco slices, and find if any matched slice pass this cut, and save this to "CutType" branch
+    /// - selectionCuts: Reco cuts that defined your signal selection
+    /// - selectionLabels: Labels to be used as branch names for the selection cuts
+    ///   For each nu, it loops over reco slices, and find if any matched slices pass selectionCuts[X], and save this to branch selectionLables[X]
     Tree( const std::string name, const std::vector<std::string>& labels,
           SpectrumLoaderBase& loader,
           const std::vector<TruthVar>& vars, const SpillCut& spillcut,
           const TruthCut& truthcut,
-          const Cut& SignalSelection,
+          const std::vector<Cut>& selectionCuts,
+          const std::vector<std::string>& selectionLabels,
           const SystShifts& shift = kNoShift,
           const bool saveRunSubEvt = false );
 
@@ -67,7 +69,9 @@ namespace ana
     void OverridePOT(double newpot) {fPOT = newpot;} // as in Spectrum: DO NOT USE UNLESS CERTAIN THERE ISN'T A BETTER WAY!
     void OverrideLivetime(double newlive) {fLivetime = newlive;} // as in Spectrum: DO NOT USE UNLESS CERTAIN THERE ISN'T A BETTER WAY!
     bool SaveTruthCutType() const {return fSaveTruthCutType;}
-    Cut GetSignalSelectionCut() const {return SignalSelection;}
+    unsigned int NSelectionCuts() const {return fSelectionCuts.size();}
+    Cut GetSelectionCut(unsigned int idx) const {return fSelectionCuts.at(idx);}
+    std::string GetSelectionLabel(unsigned int idx) const {return fSelectionLabels.at(idx);}
     virtual void SaveTo( TDirectory* dir ) const;
   protected:
     friend class WeightsTree;
@@ -80,7 +84,8 @@ namespace ana
     bool fSaveRunSubEvt;
     bool fSaveSliceNum;
     bool fSaveTruthCutType;
-    const Cut SignalSelection;
+    const std::vector<Cut> fSelectionCuts;
+    const std::vector<std::string> fSelectionLabels;
   };
 
   /// Allows to make covariance matrices using \ref Tree objects cleverly

@@ -21,7 +21,7 @@ namespace ana
               SpectrumLoaderBase& loader,
               const std::vector<Var>& vars, const SpillCut& spillcut,
               const Cut& cut, const SystShifts& shift, const bool saveRunSubEvt, const bool saveSliceNum )
-    : fTreeName(name), fNEntries(0), fPOT(0), fLivetime(0), fSaveRunSubEvt(saveRunSubEvt), fSaveSliceNum(saveSliceNum), fSaveTruthCutType(false), SignalSelection(kNoCut)
+    : fTreeName(name), fNEntries(0), fPOT(0), fLivetime(0), fSaveRunSubEvt(saveRunSubEvt), fSaveSliceNum(saveSliceNum), fSaveTruthCutType(false), fSelectionCuts({kNoCut}), fSelectionLabels({"CutType"})
   {
     assert( labels.size() == vars.size() );
 
@@ -53,7 +53,7 @@ namespace ana
               SpectrumLoaderBase& loader,
               const std::vector<MultiVar>& vars, const SpillCut& spillcut,
               const Cut& cut, const SystShifts& shift, const bool saveRunSubEvt, const bool saveSliceNum )
-    : fTreeName(name), fNEntries(0), fPOT(0), fLivetime(0), fSaveRunSubEvt(saveRunSubEvt), fSaveSliceNum(saveSliceNum), fSaveTruthCutType(false), SignalSelection(kNoCut)
+    : fTreeName(name), fNEntries(0), fPOT(0), fLivetime(0), fSaveRunSubEvt(saveRunSubEvt), fSaveSliceNum(saveSliceNum), fSaveTruthCutType(false), fSelectionCuts({kNoCut}), fSelectionLabels({"CutType"})
   {
     assert( labels.size() == vars.size() );
 
@@ -84,7 +84,7 @@ namespace ana
   Tree::Tree( const std::string name, const std::vector<std::string>& labels,
               SpectrumLoaderBase& loader,
               const std::vector<SpillVar>& vars, const SpillCut& spillcut, const bool saveRunSubEvt )
-    : fTreeName(name), fNEntries(0), fPOT(0), fLivetime(0), fSaveRunSubEvt(saveRunSubEvt), fSaveSliceNum(false), fSaveTruthCutType(false), SignalSelection(kNoCut)
+    : fTreeName(name), fNEntries(0), fPOT(0), fLivetime(0), fSaveRunSubEvt(saveRunSubEvt), fSaveSliceNum(false), fSaveTruthCutType(false), fSelectionCuts({kNoCut}), fSelectionLabels({"CutType"})
   {
     assert( labels.size() == vars.size() );
 
@@ -111,7 +111,7 @@ namespace ana
   Tree::Tree( const std::string name, const std::vector<std::string>& labels,
               SpectrumLoaderBase& loader,
               const std::vector<SpillMultiVar>& vars, const SpillCut& spillcut, const bool saveRunSubEvt )
-    : fTreeName(name), fNEntries(0), fPOT(0), fLivetime(0), fSaveRunSubEvt(saveRunSubEvt), fSaveSliceNum(false), fSaveTruthCutType(false), SignalSelection(kNoCut)
+    : fTreeName(name), fNEntries(0), fPOT(0), fLivetime(0), fSaveRunSubEvt(saveRunSubEvt), fSaveSliceNum(false), fSaveTruthCutType(false), fSelectionCuts({kNoCut}), fSelectionLabels({"CutType"})
   {
     assert( labels.size() == vars.size() );
 
@@ -139,14 +139,19 @@ namespace ana
               SpectrumLoaderBase& loader,
               const std::vector<TruthVar>& vars, const SpillCut& spillcut,
               const TruthCut& truthcut,
-              const Cut& SignalSelection,
+              const std::vector<Cut>& selectionCuts,
+              const std::vector<std::string>& selectionLabels,
               const SystShifts& shift,
               const bool saveRunSubEvt)
-    : fTreeName(name), fNEntries(0), fPOT(0), fLivetime(0), fSaveRunSubEvt(saveRunSubEvt), fSaveSliceNum(false), fSaveTruthCutType(true), SignalSelection(SignalSelection)
+    : fTreeName(name), fNEntries(0), fPOT(0), fLivetime(0), fSaveRunSubEvt(saveRunSubEvt), fSaveSliceNum(false), fSaveTruthCutType(true), fSelectionCuts(selectionCuts), fSelectionLabels(selectionLabels)
   {
     assert( labels.size() == vars.size() );
+    assert( selectionLabels.size() == selectionCuts.size() );
 
-    fOrderedBranchNames.push_back( "CutType/i" ); fBranchEntries["CutType/i"] = {};
+    for ( unsigned int i=0; i<selectionLabels.size(); ++i ) {
+      fOrderedBranchNames.push_back( selectionLabels.at(i)+"/i" );
+      fBranchEntries[selectionLabels.at(i)+"/i"] = {};
+    }
     fOrderedBranchNames.push_back( "RecoShiftWeight" ); fBranchEntries["RecoShiftWeight"] = {};
     fOrderedBranchNames.push_back( "SpillCutType/i" ); fBranchEntries["SpillCutType/i"] = {};
 
