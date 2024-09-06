@@ -1,3 +1,6 @@
+find_package(cetlib)
+find_package(cetlib_except)
+
 
 file(GLOB lib_srcs *.cxx)
 cet_make_library(LIBRARY_NAME CAFAnaSysts
