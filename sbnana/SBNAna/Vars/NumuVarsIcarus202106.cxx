@@ -74,6 +74,7 @@ namespace ana
       return p;
     });
 
+/*
   const Var kTrueMuonP([](const caf::SRSliceProxy* slc) -> float {
       float p(-5.f);
 
@@ -84,6 +85,6 @@ namespace ana
       }
       return p;
     });
-
+*/
 
 }
