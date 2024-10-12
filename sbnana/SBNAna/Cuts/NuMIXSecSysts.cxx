@@ -816,5 +816,27 @@ namespace ana {
   }
 */
 
+
+  NuMIBeamG3ChaseSyst::NuMIBeamG3ChaseSyst(const std::string& name, const std::string& latexName):
+    ISyst(name, latexName)
+  {
+
+  }
+
+  void NuMIBeamG3ChaseSyst::Shift(double sigma, caf::SRSliceProxy *sr, double& weight) const
+  {
+    this->Shift(sigma, &sr->truth, weight);
+  }
+
+  void NuMIBeamG3ChaseSyst::Shift(double sigma, caf::SRTrueInteractionProxy *sr, double& weight) const {
+
+    if(sr->index < 0) return; // No neutrino
+
+    static double G3ChaseOneSigError = 0.086; // 8.6percent
+    double this_rw = 1. + sigma * G3ChaseOneSigError;
+    weight *= this_rw;
+
+  }
+
 } // end namespace ana#include "sbnana/SBNAna/Cuts/NuMIXSecSysts.h"
 

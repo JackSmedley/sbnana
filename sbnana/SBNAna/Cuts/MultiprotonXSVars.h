@@ -10,6 +10,7 @@
 #include "sbnana/CAFAna/Core/MultiVar.h"
 #include "sbnana/SBNAna/Cuts/TruthCuts.h"
 #include "sbnana/SBNAna/Cuts/NuMIXSecSysts.h"
+#include "sbnana/SBNAna/Cuts/NuMIXSecDetectorSysts.h"
 #include "sbnana/SBNAna/Vars/NuMIFlux.h"
 #include "sbnanaobj/StandardRecord/Proxy/SRProxy.h"
 
@@ -341,9 +342,9 @@ extern const MultiVar kScndProtonDaughterTrkScore;
 
 extern const Var kScndProtonDirChange;
 
-extern const Var kScndProtonProtonP;
+extern const Var kScndProtonP;
 
-extern const Var kScndProtonProtonPResid;
+extern const Var kScndProtonPResid;
 
 extern const Var kRecoMuonEndProcess;
 
@@ -918,13 +919,6 @@ extern const TruthVar tStopping;
 
 extern const TruthVar tAllStopping;
 
-
-
-
-
-
-
-
 extern const Var kCategory;
 
 extern const Var kClassLabel;
@@ -935,109 +929,16 @@ extern const Var kContained;
 
 extern const Var kGENIEMode;
 
-std::vector<std::string> GetGENIEMultisigmaKnobNames(){
 
-  return {
-/* ZExpA_VariationResponse
-"ZExpA1CCQE",
-"ZExpA2CCQE",
-"ZExpA3CCQE",
-"ZExpA4CCQE",
-*/
-"RPA_CCQE",
-"CoulombCCQE",
-"NormCCMEC",
-"NormNCMEC",
-//"DecayAngMEC", --> MirrorSyst!
-/* NCEL_VariationResponse
-"MaNCEL",
-"EtaNCEL",
-*/
-/* CCRES_VariationResponse
-"MaCCRES",
-"MvCCRES",
-*/
-/* NCRES_VariationResponse
-"MaNCRES",
-"MvNCRES",
-*/
-"NonRESBGvpCC1pi",
-"NonRESBGvpCC2pi",
-"NonRESBGvpNC1pi",
-"NonRESBGvpNC2pi",
-"NonRESBGvnCC1pi",
-"NonRESBGvnCC2pi",
-"NonRESBGvnNC1pi",
-"NonRESBGvnNC2pi",
-"NonRESBGvbarpCC1pi",
-"NonRESBGvbarpCC2pi",
-"NonRESBGvbarpNC1pi",
-"NonRESBGvbarpNC2pi",
-"NonRESBGvbarnCC1pi",
-"NonRESBGvbarnCC2pi",
-"NonRESBGvbarnNC1pi",
-"NonRESBGvbarnNC2pi",
-"RDecBR1gamma",
-"RDecBR1eta",
-"NormCCCOH",
-"NormNCCOH",
-/* DISBY_VariationResponse
-"AhtBY",
-"BhtBY",
-"CV1uBY",
-"CV2uBY",
-*/
-/* FIS_pi_VariationResponse
-"MFP_pi",
-"FrCEx_pi",
-"FrInel_pi",
-"FrAbs_pi",
-"FrPiProd_pi",
-*/
-/* FSI_N_VariationResponse
-"MFP_N",
-"FrCEx_N",
-"FrInel_N",
-"FrAbs_N",
-"FrPiProd_N",
-*/
-  };
 
-}
 
-std::vector<std::string> GetGENIEDependentKnobNames(){
-  return {
-"ZExpAVariationResponse",
-"NCELVariationResponse",
-"CCRESVariationResponse",
-"NCRESVariationResponse",
-"DISBYVariationResponse",
-"FSI_pi_VariationResponse",
-"FSI_N_VariationResponse",
-"reinteractions_piminus_Geant4",
-"reinteractions_piplus_Geant4",
-"reinteractions_proton_Geant4",
+std::vector<std::string> GetGENIEMultisigmaKnobNames();
 
-  };
-}
+std::vector<std::string> GetGENIEDependentKnobNames();
 
-std::vector<std::string> GetFluxKnobNames(unsigned nPCs) {
-  std::vector<std::string> knobs = {
-"beam_div",
-"beam_power",
-"beam_shift_x",
-"beam_spot",
-"horn1_x",
-"horn1_y",
-"horn_current_plus",
-"water_layer",
-"beam_shift_y"
-  };
-  for ( unsigned i = 0; i < nPCs; i++ ) knobs.push_back( "flux_PCA_" + std::to_string(i) );
-  knobs.push_back("flux_stat");
+std::vector<std::string> GetFluxKnobNames(unsigned nPCs);
 
-  return knobs;
-}
+std::vector<std::string> GetDetectorKnobNames();
 
 }//END NAMESPACE
 #endif

@@ -127,4 +127,20 @@ namespace ana
   };
 */
 
+
+  //---------------------------------------------------------------------
+  // Flat flux systematic, assessed by Gray
+  class NuMIBeamG3ChaseSyst: public ISyst
+  {
+  public:
+
+    NuMIBeamG3ChaseSyst(const std::string& name, const std::string& latexName);
+
+    void Shift(double sigma, caf::SRSliceProxy *sr, double& weight) const override;
+    void Shift(double sigma, caf::SRTrueInteractionProxy *sr, double& weight) const override;
+
+  private:
+
+  };
+
 }
