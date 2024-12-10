@@ -103,4 +103,30 @@ namespace ana {
 
   }
 
+  const NuMIXSecDetectorSysts kNuMIXSecFrontIndPlaneGainSyst(
+    NuMIXSecDetectorSysts::kFrontIndPlaneGain,
+    "NuMIXSecFrontIndPlaneGainSyst",
+    "Front ind. plane gain #pm10%"
+  );
+  const NuMIXSecDetectorSysts kNuMIXSecFrontIndPlaneNoiseSyst(
+    NuMIXSecDetectorSysts::kFrontIndPlaneNoise,
+    "NuMIXSecFrontIndPlaneNoiseSyst",
+    "Front ind. plane noise +10%"
+  );
+  const NuMIXSecDetectorSysts kNuMIXSecFrontIndPlaneSignalShapeSyst(
+    NuMIXSecDetectorSysts::kFrontIndPlaneSignalShape,
+    "NuMIXSecFrontIndPlaneSignalShapeSyst",
+    "Front ind. plane signal shape"
+  );
+  const NuMIXSecDetectorSysts kNuMIXSecMiddleIndPlaneTransparencySyst(
+    NuMIXSecDetectorSysts::kMiddleIndPlaneTransparency,
+    "NuMIXSecMiddleIndPlaneTransparencySyst",
+    "Middle ind. plane transparency"
+  );
+  const NuMIXSecDetectorSysts kNuMIXSeCaloGainSyst(
+    NuMIXSecDetectorSysts::kMiddleIndPlaneTransparency,
+    "NuMIXSeCaloGainSyst",
+    "Calorimetry gain"
+  );
+
 } // end namespace ana
