@@ -80,6 +80,11 @@ namespace ana {
       weight *= 1. + sigma * 0.03;
 
     }
+    else if(kDetSystType==kElectronLifetime){
+
+      weight *= 1. + sigma * 0.06;
+
+    }
 
     else{
 
@@ -125,8 +130,13 @@ namespace ana {
   );
   const NuMIXSecDetectorSysts kNuMIXSeCaloGainSyst(
     NuMIXSecDetectorSysts::kMiddleIndPlaneTransparency,
-    "NuMIXSeCaloGainSyst",
+    "NuMIXSecCaloGainSyst",
     "Calorimetry gain"
+  );
+  const NuMIXSecDetectorSysts kNuMIXSeElectronLifetimeSyst(
+    NuMIXSecDetectorSysts::kMiddleIndPlaneTransparency,
+    "NuMIXSecElectronLifetimeSyst",
+    "Electron lifetime 9.2ms"
   );
 
 } // end namespace ana

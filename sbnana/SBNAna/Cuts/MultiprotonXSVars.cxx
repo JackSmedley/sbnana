@@ -8211,6 +8211,8 @@ std::vector<std::string> GetDetectorKnobNames() {
 "kNuMIXSecFrontIndPlaneNoiseSyst",
 "kNuMIXSecFrontIndPlaneNoiseSyst",
 "kNuMIXSecMiddleIndPlaneTransparencySyst",
+"kNuMIXSecCaloGainSyst",
+"kNuMIXSecElectronLifetimeSyst",
   };
   return knobs;
 }

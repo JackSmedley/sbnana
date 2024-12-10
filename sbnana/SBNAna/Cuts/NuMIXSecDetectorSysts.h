@@ -46,6 +46,7 @@ namespace ana
       kFrontIndPlaneSignalShapeFitted,
       kMiddleIndPlaneTransparency,
       kCaloGain,
+      kElectronLifetime,
       kSCE,
     };
 
@@ -67,5 +68,6 @@ namespace ana
   extern const NuMIXSecDetectorSysts kNuMIXSecFrontIndPlaneSignalShapeSyst;
   extern const NuMIXSecDetectorSysts kNuMIXSecMiddleIndPlaneTransparencySyst;
   extern const NuMIXSecDetectorSysts kNuMIXSecCaloGainSyst;
+  extern const NuMIXSecDetectorSysts kNuMIXSecElectronLifetimeSyst;
 
 }
