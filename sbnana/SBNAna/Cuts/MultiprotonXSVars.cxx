@@ -257,7 +257,7 @@ const Var kRecoProtonIdx([](const caf::SRSliceProxy* slc) -> int {
 */
 
       // do we want to make the proton cut even tighter on PID
-      if ( Atslc < 10.0 && slc->reco.pfp.at(idxTrk).parent_is_primary && Contained && /*Chi2Proton <= 100 && Chi2Muon >= 30*/  Chi2Proton < 50. && Chi2Muon != 0. && angle >= -0.9 && trk.len > maxLength ) {
+      if ( Atslc < 10.0 && slc->reco.pfp.at(idxTrk).parent_is_primary && Contained && /*Chi2Proton <= 100 && Chi2Muon >= 30*/  Chi2Proton < 50. && Chi2Muon != 0. && angle >= -0.9 && trk.len > maxLength && trk.rangeP.p_proton > .35) {
         maxLength = trk.len;
         idxScdy = (int)idxTrk;
       }
@@ -1106,7 +1106,7 @@ const Var kScndProtonIdx([](const caf::SRSliceProxy* slc) -> float {
 
     const bool AtSlice = ( Atslc < 10.0 && slc->reco.pfp.at(idxTrk).parent_is_primary);
     const bool chi2PID = ( trk.chi2pid[2].chi2_proton < 50. && trk.chi2pid[2].chi2_muon != 0. );
-    if ( AtSlice && chi2PID && trk.len > longest  && Contained ) {
+    if ( AtSlice && chi2PID && trk.len > longest  && Contained && trk.rangeP.p_proton > .35) {
       longest = trk.len;
       idxProton2 = idxTrk;
     }
@@ -1129,7 +1129,7 @@ const Var kThirdProton([](const caf::SRSliceProxy* slc) -> int {
     if ( !slc->reco.pfp.at(idxTrk).parent_is_primary ) continue;
     if ( idxTrk == idxMuon || idxTrk == idxP1 || idxTrk == idxP2 ) continue;
     const auto &pfp = slc->reco.pfp.at(idxTrk);
-    if ( pfp.trk.chi2pid[2].chi2_proton <= 50. && pfp.trk.chi2pid[2].chi2_muon != 0. && pfp.trk.rangeP.p_proton >= .35 && pfp.trk.len > longest ) {
+    if ( pfp.trk.chi2pid[2].chi2_proton <= 50. && pfp.trk.chi2pid[2].chi2_muon != 0. && pfp.trk.rangeP.p_proton > .35 && pfp.trk.len > longest ) {
       longest = pfp.trk.rangeP.p_proton;
       idx = idxTrk;
     }
@@ -1381,13 +1381,26 @@ const Var kRecoMuonThetaNuMI([](const caf::SRSliceProxy* slc) -> float {
     return costh;
   });
 
-const Var kRecoMuonPNuMI([](const caf::SRSliceProxy* slc) -> float {
+const Var kRecoMuonPL([](const caf::SRSliceProxy* slc) -> float {
     float momentum = -9999.;
 
     if ( kRecoMuonIdx(slc) >= 0 ) {
       double pMu_mag = kRecoMuonPNew(slc);
       double costh = kRecoMuonThetaNuMI(slc);
       momentum = pMu_mag * costh;
+    }
+
+    return momentum;
+  });
+
+const Var kRecoMuonPT([](const caf::SRSliceProxy* slc) -> float {
+    float momentum = -9999.;
+
+    if ( kRecoMuonIdx(slc) >= 0 ) {
+      double pMu_mag = kRecoMuonPNew(slc);
+      double costh = kRecoMuonThetaNuMI(slc);
+      double sinth = std::sqrt( 1. - costh*costh );
+      momentum = pMu_mag * sinth;
     }
 
     return momentum;
@@ -2420,6 +2433,18 @@ const Var kRecoProtonNDaughters([](const caf::SRSliceProxy* slc) -> float {
     if ( kRecoProtonIdx(slc) >= 0 )
     { 
       auto const& pfp = slc->reco.pfp.at(kRecoProtonIdx(slc));
+      nDaughters = pfp.daughters.size();
+    }
+
+    return nDaughters;
+  });
+
+const Var kSidebandPionNDaughters([](const caf::SRSliceProxy* slc) -> float {
+    int nDaughters = -1;
+
+    if ( kSidebandPion(slc) >= 0 )
+    {
+      auto const& pfp = slc->reco.pfp.at(kSidebandPion(slc));
       nDaughters = pfp.daughters.size();
     }
 
@@ -4300,6 +4325,49 @@ const Var kMuonPionAngleTruth([](const caf::SRSliceProxy* slc) -> float {
     return costh;
   });
 
+const Var kProtonPionAngle([](const caf::SRSliceProxy* slc) -> float {
+    float costh = -9999.;
+
+    if ( !kHasSidebandPion(slc) ) return costh;
+
+    unsigned int idxProton = (unsigned int) kRecoProtonIdx(slc);
+    unsigned int idxPion = (unsigned int) kSidebandPion(slc);
+
+    TVector3 pProton(slc->reco.pfp.at(idxProton).trk.dir.x, slc->reco.pfp.at(idxProton).trk.dir.y, slc->reco.pfp.at(idxProton).trk.dir.z);
+    TVector3 pPi(slc->reco.pfp.at(idxPion).trk.dir.x, slc->reco.pfp.at(idxPion).trk.dir.y, slc->reco.pfp.at(idxPion).trk.dir.z);
+
+    costh = pPi.Dot(pProton) / pProton.Mag() / pPi.Mag();
+    return costh;
+  });
+
+const Var kProtonPionAngleTruth([](const caf::SRSliceProxy* slc) -> float {
+    float costh = -9999.;
+    if ( slc->truth.index < 0 ) return costh;
+    const auto &nu = slc->truth;
+
+    TVector3 thisP;
+    TVector3 pPi = {0., 0., 0.};
+    TVector3 pProton = {0., 0., 0.};
+
+    for ( const auto &prim : nu.prim ) {
+      if ( prim.start_process != 0 ) continue;
+      thisP = {prim.startp.x, prim.startp.y, prim.startp.z};
+      if ( thisP.Mag() == std::hypot(-9999., -9999., -9999.) ) return costh;
+      if ( abs(prim.pdg) == 2212 ) {
+        pProton = thisP;
+        if ( thisP.Mag() > pProton.Mag() )  pProton = thisP;
+      }
+      else if ( abs(prim.pdg) == 211 ) {
+        if ( thisP.Mag() > pPi.Mag() )  pPi = thisP;
+      }
+    }
+
+    if ( pProton.Mag() == 0. || pPi.Mag() == 0. ) return costh;
+    costh = pProton.Dot(pPi) / (  pProton.Mag() * pPi.Mag() );
+
+    return costh;
+  });
+
 const Var kSidebandPionThetaNuMI([](const caf::SRSliceProxy* slc) -> float {
     float theta = -9999.;
 
@@ -4392,6 +4460,31 @@ const Var kRecoProtonThetaNuMI([](const caf::SRSliceProxy* slc) -> float {
     return theta;
   });
 
+const Var kRecoProtonPL([](const caf::SRSliceProxy* slc) -> float {
+    float momentum = -9999.;
+
+    if ( kRecoProtonIdx(slc) >= 0 ) {
+      double pMu_mag = kRecoProtonP(slc);
+      double costh = kRecoProtonThetaNuMI(slc);
+      momentum = pMu_mag * costh;
+    }
+
+    return momentum;
+  });
+
+const Var kRecoProtonPT([](const caf::SRSliceProxy* slc) -> float {
+    float momentum = -9999.;
+
+    if ( kRecoProtonIdx(slc) >= 0 ) {
+      double pMu_mag = kRecoProtonP(slc);
+      double costh = kRecoProtonThetaNuMI(slc);
+      double sinth = std::sqrt( 1. - costh*costh );
+      momentum = pMu_mag * sinth;
+    }
+
+    return momentum;
+  });
+
 const Var kRecoProtonTruthThetaNuMI([](const caf::SRSliceProxy* slc) -> float {
     float costh = -9999.;
 
@@ -4472,6 +4565,31 @@ const Var kScndProtonThetaNuMI([](const caf::SRSliceProxy* slc) -> float {
     }
 
     return costh;
+  });
+
+const Var kScndProtonPL([](const caf::SRSliceProxy* slc) -> float {
+    float momentum = -9999.;
+
+    if ( kScndProtonIdx(slc) >= 0 ) {
+      double pMu_mag = kScndProtonP(slc);
+      double costh = kScndProtonThetaNuMI(slc);
+      momentum = pMu_mag * costh;
+    }
+
+    return momentum;
+  });
+
+const Var kScndProtonPT([](const caf::SRSliceProxy* slc) -> float {
+    float momentum = -9999.;
+
+    if ( kScndProtonIdx(slc) >= 0 ) {
+      double pMu_mag = kScndProtonP(slc);
+      double costh = kScndProtonThetaNuMI(slc);
+      double sinth = std::sqrt( 1. - costh*costh );
+      momentum = pMu_mag * sinth;
+    }
+
+    return momentum;
   });
 
 const Var kScndProtonTruthThetaNuMI([](const caf::SRSliceProxy* slc) -> float {
@@ -4741,6 +4859,33 @@ const Var kSidebandPionTruePDG([](const caf::SRSliceProxy* slc) -> float {
   if ( idxP3 >= 0 ) pdg = slc->reco.pfp.at(idxP3).trk.truth.p.pdg;
 
   return pdg;
+  });
+
+const Var kSidebandPionChi2Muon([](const caf::SRSliceProxy* slc) -> float {
+  double chi2 = -5.;
+  int idxP3 = kSidebandPion(slc);
+
+  if ( idxP3 >= 0 ) chi2 = slc->reco.pfp.at(idxP3).trk.chi2pid[2].chi2_muon;
+
+  return chi2;
+  });
+
+const Var kSidebandPionChi2Proton([](const caf::SRSliceProxy* slc) -> float {
+  double chi2 = -5.;
+  int idxP3 = kSidebandPion(slc);
+
+  if ( idxP3 >= 0 ) chi2 = slc->reco.pfp.at(idxP3).trk.chi2pid[2].chi2_proton;
+
+  return chi2;
+  });
+
+const Var kSidebandPionTrackScore([](const caf::SRSliceProxy* slc) -> float {
+  double score = -1.;
+  int idxP3 = kSidebandPion(slc);
+
+  if ( idxP3 >= 0 ) score = slc->reco.pfp.at(idxP3).trackScore;
+
+  return score;
   });
 
 const Var kLeadingProtonPFrac([](const caf::SRSliceProxy* slc) -> float {
@@ -7980,6 +8125,49 @@ std::vector<std::string> GetGENIEMultisigmaKnobNames(){
 "RDecBR1eta",
 "NormCCCOH",
 "NormNCCOH",
+
+"MaNCEL",
+"EtaNCEL",
+"MaCCRES",
+"MvCCRES",
+"MaNCRES",
+"MvNCRES",
+"AhtBY",
+"BhtBY",
+"CV1uBY",
+"CV2uBY",
+"MFP_pi",
+"FrCEx_pi",
+"FrInel_pi",
+"FrAbs_pi",
+"FrPiProd_pi",
+"MFP_N",
+"FrCEx_N",
+"FrInel_N",
+"FrAbs_N",
+"FrPiProd_N",
+  };
+
+}
+
+std::vector<std::string> GetGENIEMorphKnobNames(){
+
+  return {
+"DecayAngMEC",
+"VecFFCCQEshape",
+"Theta_Delta2Npi",
+"ThetaDelta2NRad",
+  };
+
+}
+
+std::vector<std::string> GetNuSystMorphKnobNames(){
+
+  return {
+"XSecShape_CCMEC",
+"XSecShape_CCMEC_Empirical",
+"XSecShape_CCMEC_Martini",
+"EnergyDependence_CCMEC",
   };
 
 }
@@ -7996,7 +8184,6 @@ std::vector<std::string> GetGENIEDependentKnobNames(){
 "reinteractions_piminus_Geant4",
 "reinteractions_piplus_Geant4",
 "reinteractions_proton_Geant4",
-
   };
 }
 

@@ -168,7 +168,9 @@ extern const Cut kMuPiMixing;
 
 extern const Var kRecoMuonThetaNuMI;
 
-extern const Var kRecoMuonPNuMI;
+extern const Var kRecoMuonPL;
+
+extern const Var kRecoMuonPT;
 
 extern const Var kRecoMuonTrackLength;
 
@@ -548,6 +550,10 @@ extern const Var kMuonPionAngle;
 
 extern const Var kMuonPionAngleTruth;
 
+extern const Var kProtonPionAngle;
+
+extern const Var kProtonPionAngleTruth;
+
 extern const Var kSidebandPionThetaNuMI;
 
 extern const Var kSidebandPionTruthThetaNuMI;
@@ -560,6 +566,10 @@ extern const Var kRecoMuonStartDotEnd;
 
 extern const Var kRecoProtonThetaNuMI;
 
+extern const Var kRecoProtonPL;
+
+extern const Var kRecoProtonPT;
+
 extern const Var kRecoProtonTruthThetaNuMI;
 
 extern const Var kRecoProtonThetaNuMIResid;
@@ -571,6 +581,10 @@ extern const Var kRecoProtonTruthDirDotRecoWide;
 extern const Var kRecoProtonStartDotEnd;
 
 extern const Var kScndProtonThetaNuMI;
+
+extern const Var kScndProtonPL;
+
+extern const Var kScndProtonPT;
 
 extern const Var kScndProtonTruthThetaNuMI;
     
@@ -611,6 +625,14 @@ extern const Var kSidebandPionPResid;
 extern const Var kSidebandPionTrackLength;
 
 extern const Var kSidebandPionTruePDG;
+
+extern const Var kSidebandPionChi2Muon;
+
+extern const Var kSidebandPionChi2Proton;
+
+extern const Var kSidebandPionTrackScore;
+
+extern const Var kSidebandPionNDaughters;
 
 extern const Var kLeadingProtonPFrac;
 
@@ -933,6 +955,10 @@ extern const Var kGENIEMode;
 
 
 std::vector<std::string> GetGENIEMultisigmaKnobNames();
+
+std::vector<std::string> GetGENIEMorphKnobNames();
+
+std::vector<std::string> GetNuSystMorphKnobNames();
 
 std::vector<std::string> GetGENIEDependentKnobNames();
 
