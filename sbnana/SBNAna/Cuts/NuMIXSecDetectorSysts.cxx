@@ -133,12 +133,12 @@ namespace ana {
     "NuMIXSecMiddleIndPlaneTransparencySyst",
     "Middle ind. plane transparency"
   );
-  const NuMIXSecDetectorSysts kNuMIXSeCaloGainSyst(
+  const NuMIXSecDetectorSysts kNuMIXSecCaloGainSyst(
     NuMIXSecDetectorSysts::kMiddleIndPlaneTransparency,
     "NuMIXSecCaloGainSyst",
     "Calorimetry gain"
   );
-  const NuMIXSecDetectorSysts kNuMIXSeElectronLifetimeSyst(
+  const NuMIXSecDetectorSysts kNuMIXSecElectronLifetimeSyst(
     NuMIXSecDetectorSysts::kMiddleIndPlaneTransparency,
     "NuMIXSecElectronLifetimeSyst",
     "Electron lifetime 9.2ms"
