@@ -123,6 +123,11 @@ namespace ana {
     "NuMIXSecFrontIndPlaneSignalShapeSyst",
     "Front ind. plane signal shape"
   );
+  const NuMIXSecDetectorSysts kNuMIXSecFrontIndPlaneSignalShapeFittedSyst(
+    NuMIXSecDetectorSysts::kFrontIndPlaneSignalShapeFitted,
+    "NuMIXSecFrontIndPlaneSignalShapeFittedSyst",
+    "Front ind. plane signal shape"
+  );
   const NuMIXSecDetectorSysts kNuMIXSecMiddleIndPlaneTransparencySyst(
     NuMIXSecDetectorSysts::kMiddleIndPlaneTransparency,
     "NuMIXSecMiddleIndPlaneTransparencySyst",

@@ -66,6 +66,7 @@ namespace ana
   extern const NuMIXSecDetectorSysts kNuMIXSecFrontIndPlaneGainSyst;
   extern const NuMIXSecDetectorSysts kNuMIXSecFrontIndPlaneNoiseSyst;
   extern const NuMIXSecDetectorSysts kNuMIXSecFrontIndPlaneSignalShapeSyst;
+  extern const NuMIXSecDetectorSysts kNuMIXSecFrontIndPlaneSignalShapeFittedSyst;
   extern const NuMIXSecDetectorSysts kNuMIXSecMiddleIndPlaneTransparencySyst;
   extern const NuMIXSecDetectorSysts kNuMIXSecCaloGainSyst;
   extern const NuMIXSecDetectorSysts kNuMIXSecElectronLifetimeSyst;
