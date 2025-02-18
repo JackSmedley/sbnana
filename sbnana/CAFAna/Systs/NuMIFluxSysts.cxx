@@ -32,7 +32,7 @@ namespace ana {
       }
 
       fFluxFilePath = std::string(sbndata) +
-                     "beamData/NuMIdata/2023-07-31_out_450.37_7991.98_79512.66_QEL11.root";
+                     "beamData/NuMIdata/2024-10-03_out_450.37_7991.98_79512.66.root";
     }
   }
 
@@ -176,9 +176,14 @@ namespace ana {
                                                  "horn_current_plus",
                                                  "water_layer"};
 
+    // TODO) USE OLD FILE FOR BEAMLINE UNTIL NEW ONE ARRIVES
+    const char* sbndata = std::getenv("SBNDATA_DIR");
+    std::string fFluxFilePath = std::string(sbndata) +
+                     "beamData/NuMIdata/2023-07-31_out_450.37_7991.98_79512.66_QEL11.root";
+
     std::vector<const ISyst*> ret;
     for (const auto& name : syst_names)
-      ret.push_back(GetNuMIFluxSyst("beam_systematic_shifts", "hsyst_beam_", name));
+      ret.push_back(GetNuMIFluxSyst("beam_systematic_shifts", "hsyst_beam_", name, fFluxFilePath));
     ret.push_back( GetNuMIBeamShiftSyst() );
     return ret;
   }
@@ -224,6 +229,8 @@ namespace ana {
                   << std::endl;
         std::abort();
       }
+
+      // TODO) UPDATE TO NEWER FILE ONCE BEAM SHIFT SYSTS ARRIVES
 
       fFluxFilePath = std::string(sbndata) +
                       "beamData/NuMIdata/2023-07-31_out_450.37_7991.98_79512.66_QEL11.root";

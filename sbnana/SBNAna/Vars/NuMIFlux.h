@@ -57,4 +57,23 @@ namespace ana
   extern const Var kGetNuMIFluxWeightUpdated;
   extern const TruthVar kGetTruthNuMIFluxWeightUpdated;
 
+  class NuMIPpfxFluxWeightG4Update
+  {
+  public:
+    // FOR NOW WE ONLY HAVE FHC...
+    // parent idx --> pi+/-, K+/-, mu, K0L
+    NuMIPpfxFluxWeightG4Update();
+    ~NuMIPpfxFluxWeightG4Update();
+    double GetWeightFromSRTrueInt(const caf::SRTrueInteractionProxy* nu) const;
+    unsigned int ParentPDGToIdx(int pdg) const;
+    mutable TH1* fWeight[2][2][2]; // [fhc/rhc][nue/numu][nu/nubar]
+    mutable TH1* fWeightG4Update[2][2][2][4]; // [fhc/rhc][nue/numu][nu/nubar][parent pid (pipm/kpm/k0l/mu)]
+  protected:
+    std::string fFluxFilePath;
+  };
+  static const NuMIPpfxFluxWeightG4Update FluxWeightNuMIG4Update;
+  extern const Var kGetNuMIFluxWeightG4Update;
+  extern const TruthVar kGetTruthNuMIFluxWeightG4Update;
+
 }
+
