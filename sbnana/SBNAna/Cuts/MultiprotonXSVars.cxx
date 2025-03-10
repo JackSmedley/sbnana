@@ -866,6 +866,10 @@ const MultiVar kSelectedCPiP([](const caf::SRSliceProxy* slc) {
 
 const Cut kIsSignal = (k1mu2p0pi || k1mu3p0pi);
 
+const Var kIsSignalVar([](const caf::SRSliceProxy* slc) -> int {
+    return kIsSignal(slc);
+  });
+
 const MultiVar kSelectedPi0P([](const caf::SRSliceProxy* slc) {
   std::vector<double> pionPs;
 
@@ -7288,6 +7292,14 @@ const Var kDeltaPTT_CheatingAnglesResid([](const caf::SRSliceProxy* slc) -> floa
 //! Truth Section
 //! Here we sue t<NAME> instead of k<NAME> convention to distinguish TruthCuts and TruthVars from Cuts and Vars
 
+const TruthVar tZero([](const caf::SRTrueInteractionProxy* nu) -> int {
+  return 0;
+  });
+
+const TruthVar tOne([](const caf::SRTrueInteractionProxy* nu) -> int {
+  return 1;
+  });
+
 bool containedMuon = false;
 bool containedProton = false;
 double muonThresh = 0.226;
@@ -7334,6 +7346,9 @@ const TruthCut tIsSignal([](const caf::SRTrueInteractionProxy* nu) {
   return ( nMu == 1 && nP >= 2 && nChgPi == 0 && nPi0 == 0 && nPMax == 0 );
   });
 
+const TruthVar tIsSignalVar([](const caf::SRTrueInteractionProxy* nu) -> int {
+  return tIsSignal(nu);
+  });
 
 int trueMuon_idx(const caf::SRTrueInteractionProxy* nu) {
   int idx = -1;
@@ -7751,8 +7766,59 @@ const TruthVar tTrueNProtons([](const caf::SRTrueInteractionProxy* nu) -> double
   });
 
 const Var kTrueNProtons ([](const caf::SRSliceProxy* slc) -> float {
-    if ( !(tIsSignal(&slc->truth)) ) return -9999.;
+    if ( slc->truth.index < 0 ) return 0.;
     else return tTrueNProtons(&slc->truth);
+  });
+
+const TruthVar tTrueNPiPlus([](const caf::SRTrueInteractionProxy* nu) -> double {
+    int nPiPlus = 0;
+
+    for ( auto const& prim : nu->prim ) {
+      if ( prim.start_process != 0 ) continue;
+      if ( prim.startE == -9999. )  return -9999.;
+      if ( prim.pdg == 211 ) nPiPlus++;
+    }
+
+    return nPiPlus;
+  });
+
+const Var kTrueNPiPlus ([](const caf::SRSliceProxy* slc) -> float {
+    if ( slc->truth.index < 0 ) return 0.;
+    else return tTrueNPiPlus(&slc->truth);
+  });
+
+const TruthVar tTrueNPiMinus([](const caf::SRTrueInteractionProxy* nu) -> double {
+    int nPiMinus = 0;
+
+    for ( auto const& prim : nu->prim ) {
+      if ( prim.start_process != 0 ) continue;
+      if ( prim.startE == -9999. )  return -9999.;
+      if ( prim.pdg == -211 ) nPiMinus++;
+    }
+
+    return nPiMinus;
+  });
+
+const Var kTrueNPiMinus ([](const caf::SRSliceProxy* slc) -> float {
+    if ( slc->truth.index < 0 ) return 0.;
+    else return tTrueNPiMinus(&slc->truth);
+  });
+
+const TruthVar tTrueNPiZero([](const caf::SRTrueInteractionProxy* nu) -> double {
+    int nPiZero = 0;
+
+    for ( auto const& prim : nu->prim ) {
+      if ( prim.start_process != 0 ) continue;
+      if ( prim.startE == -9999. )  return -9999.;
+      if ( prim.pdg == 111 ) nPiZero++;
+    }
+
+    return nPiZero;
+  });
+
+const Var kTrueNPiZero ([](const caf::SRSliceProxy* slc) -> float {
+    if ( slc->truth.index < 0 ) return 0.;
+    else return tTrueNPiZero(&slc->truth);
   });
 
 const TruthVar tTrueNeutronEnergy([](const caf::SRTrueInteractionProxy* nu) -> double {

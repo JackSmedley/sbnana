@@ -100,6 +100,8 @@ extern const MultiVar kSelectedCPiP;
 
 extern const Cut kIsSignal;
 
+extern const Var kIsSignalVar;
+
 extern const MultiVar kSelectedPi0P;
 
 extern const Var NonSignalPrinting;
@@ -857,7 +859,13 @@ extern const Var kDeltaPTT_CheatingAnglesResid;
 //! Truth Section
 //! Here we use t<NAME> instead of k<NAME> convention to distinguish TruthCuts and TruthVars from Cuts and Vars
 
+extern const TruthVar tZero;
+
+extern const TruthVar tOne;
+
 extern const TruthCut tIsSignal;
+
+extern const TruthVar tIsSignalVar;
 
 extern const TruthVar tTrueNeutrinoPDG;
 
@@ -930,6 +938,18 @@ extern const Var kTrueq3;
 extern const TruthVar tTrueNProtons;
 
 extern const Var kTrueNProtons;
+
+extern const TruthVar tTrueNPiPlus;
+
+extern const Var kTrueNPiPlus;
+
+extern const TruthVar tTrueNPiMinus;
+
+extern const Var kTrueNPiMinus;
+
+extern const TruthVar tTrueNPiZero;
+
+extern const Var kTrueNPiZero;
 
 extern const TruthVar tTrueNeutronEnergy;
 
