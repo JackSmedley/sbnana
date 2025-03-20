@@ -867,6 +867,8 @@ extern const TruthCut tIsSignal;
 
 extern const TruthVar tIsSignalVar;
 
+extern const TruthVar tTrueMode;
+
 extern const TruthVar tTrueNeutrinoPDG;
 
 extern const Var kTrueNeutrinoPDG;

@@ -7350,6 +7350,10 @@ const TruthVar tIsSignalVar([](const caf::SRTrueInteractionProxy* nu) -> int {
   return tIsSignal(nu);
   });
 
+const TruthVar tTrueMode([](const caf::SRTrueInteractionProxy* nu) -> int {
+  return nu->genie_mode;
+  });
+
 int trueMuon_idx(const caf::SRTrueInteractionProxy* nu) {
   int idx = -1;
 
