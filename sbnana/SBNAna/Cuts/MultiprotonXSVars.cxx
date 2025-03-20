@@ -52,22 +52,6 @@ const Var kTotalCVWeight([](const caf::SRSliceProxy* slc) {
   return ( kGetNuMIFluxWeightG4Update(slc) * kNuMISPPCVCorrection(slc) /** kNuMISplitTrackCVCorrection(slc)*/ );
   });
 
-/*
-// NuSyst fake data studies
-// - 2p2h
-const Var kXSecShape_CCMEC = GetUniverseWeight("GENIEReWeight_SBNNuSyst_GENIE_multisigma_XSecShape_CCMEC", 1);
-const Var kEnergyDependence_CCMEC = GetUniverseWeight("GENIEReWeight_SBNNuSyst_GENIE_multisigma_EnergyDependence_CCMEC", 1);
-const Var kXSecShape_CCMEC_Empirical = GetUniverseWeight("GENIEReWeight_SBNNuSyst_GENIE_multisigma_XSecShape_CCMEC_Empirical", 1);
-const Var kXSecShape_CCMEC_Martini = GetUniverseWeight("GENIEReWeight_SBNNuSyst_GENIE_multisigma_XSecShape_CCMEC_Martini", 1);
-
-// - FSI
-const Var kFSI_hN = GetUniverseWeight("FSIReweight_SBNNuSyst_FSI_hNReweight_multisigma_FSIReweight", 1);
-const Var kFSI_INCL = GetUniverseWeight("FSIReweight_SBNNuSyst_FSI_INCLReweight_multisigma_FSIReweight", 1);
-const Var kFSI_G4BC = GetUniverseWeight("FSIReweight_SBNNuSyst_FSI_G4BCReweight_multisigma_FSIReweight", 1);
-// - LQCD Zexp
-const Var kLQCDZExpFit = GetUniverseWeight("GENIEReWeight_SBNNuSyst_LQCDZExpFit_multisim_ZExpAVariationResponse", 1);
-*/
-
 const Var kOne([](const caf::SRSliceProxy* slc) -> int {
   return 1;
   });
