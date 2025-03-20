@@ -10,6 +10,22 @@ namespace ana
 {
 
   //---------------------------------------------------------------------
+  // Fake data from GENIE knobs
+
+  // NuSyst fake data studies
+  // - 2p2h
+  extern const Var kXSecShape_CCMEC;
+  extern const Var kEnergyDependence_CCMEC;
+  extern const Var kXSecShape_CCMEC_Empirical;
+  extern const Var kXSecShape_CCMEC_Martini;
+  // - FSI
+  extern const Var kFSI_hN;
+  extern const Var kFSI_INCL;
+  extern const Var kFSI_G4BC;
+  // - LQCD Zexp
+  extern const Var kLQCDZExpFit;
+
+  //---------------------------------------------------------------------
   // Single-pion production CV correction and systematics
 
   bool IsSPP(const caf::SRTrueInteractionProxy *sr);
