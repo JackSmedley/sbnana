@@ -82,7 +82,7 @@ namespace ana {
     if (nu->index < 0 || abs(nu->initpdg) == 16) return 1.0;
 
     if (!FluxWeightNuMI.fWeight[0][0][0]) {
-      std::cout << "Trying to access un-available weight array..." << std::endl;
+      std::cout << "Trying to access un-available weight array in kGetTruthNuMIFluxWeight" << std::endl;
       std::abort();
     }
 
@@ -241,7 +241,7 @@ namespace ana {
 
     /// Choose 1 1 1 for the G3Chase weight check since the 0 0 0 is meaningless here...
     if (!fWeight[0][0][0] || !fWeightG3Chase[1][1][1]) {
-      std::cout << "Trying to access un-available weight array..." << std::endl;
+      std::cout << "Trying to access un-available weight array in NuMIPpfxFluxWeightG3Chase::GetWeightFromSRTrueInt" << std::endl;
       std::abort();
     }
 
@@ -425,8 +425,9 @@ namespace ana {
   double NuMIPpfxFluxWeightG4Update::GetWeightFromSRTrueInt(const caf::SRTrueInteractionProxy* nu) const
   {
     if (nu->index < 0 || abs(nu->initpdg) == 16) return 1.0;
-    if (!fWeight[0][0][0] || !fWeightG4Update[0][0][0][0]) {
-      std::cout << "Trying to access un-available weight array..." << std::endl;
+    //if (!fWeight[0][0][0] || !fWeightG4Update[0][0][0]) {
+    if (!fWeight[0][0][0]) {
+      std::cout << "Trying to access un-available weight array in NuMIPpfxFluxWeightG4Update::GetWeightFromSRTrueInt" << std::endl;
       std::abort();
     }
     unsigned int hcIdx = 0; // assume always FHC for now...
