@@ -425,7 +425,7 @@ namespace ana {
   double NuMIPpfxFluxWeightG4Update::GetWeightFromSRTrueInt(const caf::SRTrueInteractionProxy* nu) const
   {
     if (nu->index < 0 || abs(nu->initpdg) == 16) return 1.0;
-    if (!fWeight[0][0][0] || !fWeightG4Update[0][0][0]) {
+    if (!fWeight[0][0][0] || !fWeightG4Update[0][0][0][0]) {
       std::cout << "Trying to access un-available weight array..." << std::endl;
       std::abort();
     }
