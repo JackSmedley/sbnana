@@ -19,12 +19,13 @@ namespace ana
     ~NuMIPpfxFluxWeight();
     mutable TH1* fWeight[2][2][2]; // [fhc/rhc][nue/numu][nu/nubar]
 
+    static NuMIPpfxFluxWeight& Instance();
+
   protected:
     std::string fFluxFilePath;
   };
 
   // set up to use the flux weight
-  static const NuMIPpfxFluxWeight FluxWeightNuMI;
   extern const Var kGetNuMIFluxWeight;
   extern const TruthVar kGetTruthNuMIFluxWeight;
 
@@ -43,6 +44,8 @@ namespace ana
     mutable TH1* fWeightG3Chase[2][2][4]; // [nue/numu][nu/nubar][parent idx]
     mutable TH1* fWeightG4Kaon[2]; // [nu/nubar]
 
+    static NuMIPpfxFluxWeightG3Chase& Instance();
+
   protected:
     std::string fFluxFilePath;
     std::string fFluxFilePathG3Chase;
@@ -50,7 +53,6 @@ namespace ana
   };
 
   // set up to use the flux weight with G3Chase param controlling the concrete
-  static const NuMIPpfxFluxWeightG3Chase FluxWeightNuMIG3Chase;
   extern const Var kGetNuMIFluxWeightG3Chase;
   extern const TruthVar kGetTruthNuMIFluxWeightG3Chase;
 
@@ -64,16 +66,21 @@ namespace ana
     // parent idx --> pi+/-, K+/-, mu, K0L
     NuMIPpfxFluxWeightG4Update();
     ~NuMIPpfxFluxWeightG4Update();
+
     double GetWeightFromSRTrueInt(const caf::SRTrueInteractionProxy* nu) const;
     unsigned int ParentPDGToIdx(int pdg) const;
+
     mutable TH1* fWeight[2][2][2]; // [fhc/rhc][nue/numu][nu/nubar]
     mutable TH1* fWeightG4Update[2][2][2][4]; // [fhc/rhc][nue/numu][nu/nubar][parent pid (pipm/kpm/k0l/mu)]
+
+    static NuMIPpfxFluxWeightG4Update& Instance();
+
   protected:
     std::string fFluxFilePath;
   };
-  static const NuMIPpfxFluxWeightG4Update FluxWeightNuMIG4Update;
+
+  //static const NuMIPpfxFluxWeightG4Update FluxWeightNuMIG4Update;
   extern const Var kGetNuMIFluxWeightG4Update;
   extern const TruthVar kGetTruthNuMIFluxWeightG4Update;
 
 }
-
