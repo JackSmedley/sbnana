@@ -52,6 +52,48 @@ const Var kTotalCVWeight([](const caf::SRSliceProxy* slc) {
   return ( kGetNuMIFluxWeightG4Update(slc) * kNuMISPPCVCorrection(slc) /** kNuMISplitTrackCVCorrection(slc)*/ );
   });
 
+const Var kXSecShape_CCMEC_NaNProtected([](const caf::SRSliceProxy* slc) {
+  double wgt = kXSecShape_CCMEC(slc);
+  return ( wgt==TMath::Infinity() || wgt==(TMath::Infinity()*-1.) || isnan(wgt) ) ? 1.:wgt;
+  });
+
+const Var kEnergyDependence_CCMEC_NaNProtected([](const caf::SRSliceProxy* slc) {
+  double wgt = kEnergyDependence_CCMEC(slc);
+  return ( wgt==TMath::Infinity() || wgt==(TMath::Infinity()*-1.) || isnan(wgt) ) ? 1.:wgt;
+  });
+
+const Var kXSecShape_CCMEC_Empirical_NaNProtected([](const caf::SRSliceProxy* slc) {
+  double wgt = kXSecShape_CCMEC_Empirical(slc);
+  return ( wgt==TMath::Infinity() || wgt==(TMath::Infinity()*-1.) || isnan(wgt) ) ? 1.:wgt;
+  });
+
+const Var kXSecShape_CCMEC_Martini_NaNProtected([](const caf::SRSliceProxy* slc) {
+  double wgt = kXSecShape_CCMEC_Martini(slc);
+  return ( wgt==TMath::Infinity() || wgt==(TMath::Infinity()*-1.) || isnan(wgt) ) ? 1.:wgt;
+  });
+
+const Var kFSI_hN_NaNProtected([](const caf::SRSliceProxy* slc) {
+  double wgt = kFSI_hN(slc);
+  return ( wgt==TMath::Infinity() || wgt==(TMath::Infinity()*-1.) || isnan(wgt) ) ? 1.:wgt;
+  });
+
+const Var kFSI_INCL_NaNProtected([](const caf::SRSliceProxy* slc) {
+  double wgt = kFSI_INCL(slc);
+  return ( wgt==TMath::Infinity() || wgt==(TMath::Infinity()*-1.) || isnan(wgt) ) ? 1.:wgt;
+  });
+
+const Var kFSI_G4BC_NaNProtected([](const caf::SRSliceProxy* slc) {
+  double wgt = kFSI_G4BC(slc);
+  return ( wgt==TMath::Infinity() || wgt==(TMath::Infinity()*-1.) || isnan(wgt) ) ? 1.:wgt;
+  });
+
+const Var kLQCDZExpFit_NaNProtected([](const caf::SRSliceProxy* slc) {
+  double wgt = kFSI_G4BC(slc);
+  return ( wgt==TMath::Infinity() || wgt==(TMath::Infinity()*-1.) || isnan(wgt) ) ? 1.:wgt;
+  });
+
+
+
 const Var kOne([](const caf::SRSliceProxy* slc) -> int {
   return 1;
   });

@@ -23,6 +23,22 @@ namespace ana{
 //! Product of PPFX weight, single pion production reweight from MINERvA data, and track data-driven track split reweight
 extern const Var kTotalCVWeight;
 
+extern const Var kXSecShape_CCMEC_NaNProtected;
+
+extern const Var kEnergyDependence_CCMEC_NaNProtected;
+
+extern const Var kXSecShape_CCMEC_Empirical_NaNProtected;
+
+extern const Var kXSecShape_CCMEC_Martini_NaNProtected;
+
+extern const Var kFSI_hN_NaNProtected;
+
+extern const Var kFSI_INCL_NaNProtected;
+
+extern const Var kFSI_G4BC_NaNProtected;
+
+extern const Var kLQCDZExpFit_NaNProtected;
+
 extern const Var kOne;
 
 extern const Var kZero;

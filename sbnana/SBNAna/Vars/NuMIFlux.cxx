@@ -430,10 +430,10 @@ namespace ana {
               hNameG4Update += "_kpm";
             }
             else if(pdgIdx==2){
-              hNameG4Update += "_k0l";
+              hNameG4Update += "_mu";
             }
             else if(pdgIdx==3){
-              hNameG4Update += "_mu";
+              hNameG4Update += "_k0l";
             }
             else{
               std::cout << "[NuMIPpfxFluxWeightG4Update::NuMIPpfxFluxWeightG4Update] Wrong pdgIdx: " << pdgIdx << std::endl;
