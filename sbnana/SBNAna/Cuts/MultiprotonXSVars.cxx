@@ -7740,7 +7740,7 @@ const TruthVar tTrueEHad([](const caf::SRTrueInteractionProxy* nu) -> double {
   });
 
 const Var kTrueEHad ([](const caf::SRSliceProxy* slc) -> float {
-    if ( !(tIsSignal(&slc->truth)) ) return -9999.;
+    if ( slc->truth.index < 0 ) return -9999.;
     else return tTrueEHad(&slc->truth);
   });
 
@@ -7764,12 +7764,14 @@ const TruthVar tTrueEAvail([](const caf::SRTrueInteractionProxy* nu) -> double {
   });
 
 const Var kTrueEAvail ([](const caf::SRSliceProxy* slc) -> float {
-    if ( !(tIsSignal(&slc->truth)) ) return -9999.;
+    if ( slc->truth.index < 0 ) return -9999.;
     else return tTrueEAvail(&slc->truth);
   });
 
 const TruthVar tTrueQ2([](const caf::SRTrueInteractionProxy* nu) -> double {
     double Q2 = -9999.;
+    if ( abs(nu->pdg) != 14 || !nu->iscc ) return Q2;
+
     TVector3 NuDirection_Truth = (TVector3(nu->momentum.x, nu->momentum.y, nu->momentum.z)).Unit().Unit();
 
     double eHad = tTrueEHad(nu);
@@ -7794,7 +7796,7 @@ const TruthVar tTrueQ2([](const caf::SRTrueInteractionProxy* nu) -> double {
   });
 
 const Var kTrueQ2 ([](const caf::SRSliceProxy* slc) -> float {
-    if ( !(tIsSignal(&slc->truth)) ) return -9999.;
+    if ( slc->truth.index < 0 ) return -9999.;
     else return tTrueQ2(&slc->truth);
   });
 
@@ -7808,8 +7810,25 @@ const TruthVar tTrueq3 ([](const caf::SRTrueInteractionProxy* nu) -> double {
   });
 
 const Var kTrueq3 ([](const caf::SRSliceProxy* slc) -> float {
-    if ( !(tIsSignal(&slc->truth)) ) return -9999.;
+    if ( slc->truth.index < 0 ) return -9999.;
     else return tTrueq3(&slc->truth);
+  });
+
+const TruthVar tTrueW ([](const caf::SRTrueInteractionProxy* nu) -> double {
+    double W = -9999.;
+    double eHad = tTrueEHad(nu);
+    double Q2 = tTrueQ2(nu);
+    if ( Q2 == -9999. ) return W;
+
+    double W2 = mNeutron*mNeutron + 2*mNeutron*eHad - Q2;
+    if ( W2 >= 0. ) W = sqrt(W2);
+
+    return W;
+  });
+
+const Var kTrueW ([](const caf::SRSliceProxy* slc) -> float {
+    if ( slc->truth.index < 0 ) return -9999.;
+    else return tTrueQ2(&slc->truth);
   });
 
 const TruthVar tTrueNProtons([](const caf::SRTrueInteractionProxy* nu) -> double {

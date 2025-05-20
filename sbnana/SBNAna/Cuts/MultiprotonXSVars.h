@@ -956,6 +956,10 @@ extern const TruthVar tTrueq3;
 
 extern const Var kTrueq3;
 
+extern const TruthVar tTrueW;
+
+extern const Var kTrueW;
+
 extern const TruthVar tTrueNProtons;
 
 extern const Var kTrueNProtons;
