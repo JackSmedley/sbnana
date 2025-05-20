@@ -34,7 +34,7 @@ namespace ana {
     else if(kDetSystType==kFrontIndPlaneNoise){
 
       // negative is mirrored
-      double this_sigma = abs(sigma);
+      double this_sigma = sigma;
       
       // pre-reprocessing
       //weight *= 1. + this_sigma * (-0.10);
@@ -45,7 +45,7 @@ namespace ana {
     }
     else if(kDetSystType==kFrontIndPlaneSignalShape){
       // negative is mirrored
-      double this_sigma = abs(sigma);
+      double this_sigma = sigma;
 
       // pre-reprocessing
       weight *= 1. + this_sigma * (-0.10);
@@ -53,7 +53,7 @@ namespace ana {
     else if(kDetSystType==kFrontIndPlaneSignalShapeFitted){
 
       // negative is mirrored
-      double this_sigma = abs(sigma);
+      double this_sigma = sigma;
 
       double this_stepfunc = GetSmoothStepFunction(
         RecoProtonP,

@@ -27,6 +27,11 @@ namespace ana {
   // - LQCD Zexp
   const Var kLQCDZExpFit = GetUniverseWeight("GENIEReWeight_SBNNuSyst_LQCDZExpFit_multisim_ZExpAVariationResponse", 1);
 
+  // - Potentially degernate knobs
+  const Var kDecayAngMEC = GetUniverseWeight("GENIEReWeight_ICARUS_v2_multisigma_DecayAngMEC", 1);
+  const Var kTheta_Delta2Npi = GetUniverseWeight("GENIEReWeight_ICARUS_v2_multisigma_Theta_Delta2Npi", 1);
+
+
   //---------------------------------------------------------------------
   // Functions copied from includes that I didn't pull in...
 

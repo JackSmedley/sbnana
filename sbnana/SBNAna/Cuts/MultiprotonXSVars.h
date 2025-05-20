@@ -39,6 +39,10 @@ extern const Var kFSI_G4BC_NaNProtected;
 
 extern const Var kLQCDZExpFit_NaNProtected;
 
+extern const Var kDecayAngMEC_NaNProtected;
+
+extern const Var kTheta_Delta2Npi_NaNProtected;
+
 extern const Var kOne;
 
 extern const Var kZero;

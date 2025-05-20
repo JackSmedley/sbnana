@@ -92,6 +92,15 @@ const Var kLQCDZExpFit_NaNProtected([](const caf::SRSliceProxy* slc) {
   return ( wgt==TMath::Infinity() || wgt==(TMath::Infinity()*-1.) || isnan(wgt) ) ? 1.:wgt;
   });
 
+const Var kDecayAngMEC_NaNProtected([](const caf::SRSliceProxy* slc) {
+  double wgt = kDecayAngMEC(slc);
+  return ( wgt==TMath::Infinity() || wgt==(TMath::Infinity()*-1.) || isnan(wgt) ) ? 1.:wgt;
+  });
+
+const Var kTheta_Delta2Npi_NaNProtected([](const caf::SRSliceProxy* slc) {
+  double wgt = kTheta_Delta2Npi(slc);
+  return ( wgt==TMath::Infinity() || wgt==(TMath::Infinity()*-1.) || isnan(wgt) ) ? 1.:wgt;
+  });
 
 
 const Var kOne([](const caf::SRSliceProxy* slc) -> int {
@@ -5175,13 +5184,17 @@ const Var kEHad_ThreeP([](const caf::SRSliceProxy* slc) -> float {
 const Var kEHad_Pion([](const caf::SRSliceProxy* slc) -> float {
     double eHad = -9999.;
 
-    double pP_mag = kRecoProtonP(slc);
-    double pThird_mag = kSidebandPionP(slc);
+    std::vector<double> idcsProton = kRecoProtonIndices(slc);
+    double pPi_mag = kSidebandPionP(slc);
 
-    double protonT = std::hypot(pP_mag, mProton) - mProton;
-    double pionE = std::hypot(pThird_mag, mPion);
+    for ( const auto &i : idcsProton ) {
+      const auto &trk = slc->reco.pfp.at(i).trk;
+      double thisP = trk.rangeP.p_proton;
+      eHad += std::hypot(thisP, mProton) - mProton;
+    }
+    eHad += std::hypot(pPi_mag, mPion);
 
-    eHad = protonT + pionE;
+
     return eHad;
   });
 

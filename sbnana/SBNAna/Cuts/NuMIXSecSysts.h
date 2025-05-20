@@ -25,6 +25,10 @@ namespace ana
   // - LQCD Zexp
   extern const Var kLQCDZExpFit;
 
+  // - Potentially degernate knobs
+  extern const Var kDecayAngMEC;
+  extern const Var kTheta_Delta2Npi;
+
   //---------------------------------------------------------------------
   // Single-pion production CV correction and systematics
 
