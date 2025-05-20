@@ -5182,7 +5182,7 @@ const Var kEHad_ThreeP([](const caf::SRSliceProxy* slc) -> float {
 */
 
 const Var kEHad_Pion([](const caf::SRSliceProxy* slc) -> float {
-    double eHad = -9999.;
+    double eHad = 0.;
 
     std::vector<double> idcsProton = kRecoProtonIndices(slc);
     double pPi_mag = kSidebandPionP(slc);
