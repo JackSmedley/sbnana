@@ -7828,7 +7828,7 @@ const TruthVar tTrueW ([](const caf::SRTrueInteractionProxy* nu) -> double {
 
 const Var kTrueW ([](const caf::SRSliceProxy* slc) -> float {
     if ( slc->truth.index < 0 ) return -9999.;
-    else return tTrueQ2(&slc->truth);
+    else return tTrueW(&slc->truth);
   });
 
 const TruthVar tTrueNProtons([](const caf::SRTrueInteractionProxy* nu) -> double {
