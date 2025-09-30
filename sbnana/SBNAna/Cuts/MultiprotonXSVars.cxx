@@ -49,7 +49,7 @@ const Cut kNotClearCosmic([](const caf::SRSliceProxy* slc) {
 
 //! Product of PPFX weight, single pion production reweight from MINERvA data, and track data-driven track split reweight
 const Var kTotalCVWeight([](const caf::SRSliceProxy* slc) {
-  return ( kGetNuMIFluxWeightG4Update(slc) * kNuMISPPCVCorrection(slc) /** kNuMISplitTrackCVCorrection(slc)*/ );
+  return ( kGetNuMIBeamWidthCorrection(slc) * kNuMISPPCVCorrection(slc) /** kNuMISplitTrackCVCorrection(slc)*/ );
   });
 
 const Var kXSecShape_CCMEC_NaNProtected([](const caf::SRSliceProxy* slc) {
