@@ -50,6 +50,19 @@ namespace ana {
   ///        components
   std::vector<const ISyst*> GetAllNuMIFluxSysts(unsigned int Npcs);
 
+  class NuMIBeamG3ChaseSyst: public ISyst
+  {
+  public:
+
+    NuMIBeamG3ChaseSyst(const std::string& name, const std::string& latexName);
+
+    void Shift(double sigma, caf::SRSliceProxy *sr, double& weight) const override;
+    void Shift(double sigma, caf::SRTrueInteractionProxy *sr, double& weight) const override;
+
+  private:
+
+  };
+
   /// Class *like* NuMIFluxSyst but for the BeamShift systematic
   // 05/19/25 JK) Updated to use 2025-04-08_out_450.37_7991.98_79512.66.root;
   //              The CV in this file has beam width of 1.5 mm, while 2023NuMI Reprocessing

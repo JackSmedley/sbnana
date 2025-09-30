@@ -166,8 +166,8 @@ namespace ana {
 
     const std::vector<std::string> syst_names = {"beam_div",
                                                  "beam_power",
-                                                 //"beam_shift_y_minus",
-                                                 //"beam_shift_y_plus",
+                                                 "beam_shift_y_minus",
+                                                 "beam_shift_y_plus",
                                                  "beam_shift_x",
                                                  "beam_spot",
                                                  "horn1_x",
@@ -183,7 +183,6 @@ namespace ana {
     std::vector<const ISyst*> ret;
     for (const auto& name : syst_names)
       ret.push_back(GetNuMIFluxSyst("beam_systematic_shifts", "hsyst_beam_", name, fFluxFilePath));
-    ret.push_back( GetNuMIBeamShiftSyst() );
     return ret;
   }
 

@@ -255,7 +255,7 @@ namespace ana {
 
     /// Choose 1 1 1 for the G3Chase weight check since the 0 0 0 is meaningless here...
     if (!fWeight[0][0][0] || !fWeightG3Chase[1][1][1]) {
-      std::cout << "Trying to access un-available weight array in NuMIPpfxFluxWeightG3Chase::GetWeightFromSRTrueInt" << std::endl;
+       std::cout << "Trying to access un-available weight array in NuMIPpfxFluxWeightG3Chase::GetWeightFromSRTrueInt" << std::endl;
       std::abort();
     }
 
@@ -504,7 +504,12 @@ namespace ana {
       return weight;
     }
 
-    const int bin2 = h2->FindBin(nu->E);
+    double this_NuE = nu->E;
+    if( flavIdx==0 && pdgIdx==2 ){
+      this_NuE = 1.99;
+    }
+
+    const int bin2 = h2->FindBin(this_NuE);
     if ( bin2 != 0 && bin2 != h2->GetNbinsX() + 1 && !std::isinf(h2->GetBinContent(bin2)) && !std::isnan(h2->GetBinContent(bin2)) ) {
       weight*=h2->GetBinContent(bin2);
     }
@@ -542,8 +547,8 @@ namespace ana {
   const TruthVar kGetTruthNuMIFluxWeightG4Update([](const caf::SRTrueInteractionProxy* nu) -> double {
     const NuMIPpfxFluxWeightG4Update& m = NuMIPpfxFluxWeightG4Update::Instance();
     return m.GetWeightFromSRTrueInt(nu);
+    //return FluxWeightNuMIG4Update.GetWeightFromSRTrueInt(nu);
   });
-
   const Var kGetNuMIFluxWeightG4Update([](const caf::SRSliceProxy* slc) -> double {
     return kGetTruthNuMIFluxWeightG4Update(&slc->truth);
   });
@@ -671,7 +676,7 @@ namespace ana {
     if (nu->index < 0 || abs(nu->initpdg) == 16) return 1.0;
 
     if (!fWeight[0][0][0] || !fWeightCVCorr[0][0][0][1]) {
-      std::cout << "Trying to access un-available weight array..." << std::endl;
+      std::cout << "Trying to access un-available weight array in NuMIBeamWidthCorrection::GetWeightFromSRTrueInt" << std::endl;
       std::abort();
     }
 
@@ -749,4 +754,3 @@ namespace ana {
 
 
 }
-
