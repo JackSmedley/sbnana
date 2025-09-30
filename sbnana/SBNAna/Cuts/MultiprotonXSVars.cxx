@@ -8339,6 +8339,8 @@ std::vector<std::string> GetGENIEDependentKnobNames(){
 
 std::vector<std::string> GetFluxKnobNames(unsigned nPCs) {
   std::vector<std::string> knobs = {
+
+/*
 "beam_div",
 "beam_power",
 "beam_shift_x",
@@ -8348,6 +8350,19 @@ std::vector<std::string> GetFluxKnobNames(unsigned nPCs) {
 "horn_current_plus",
 "water_layer",
 "beam_shift_y"
+*/
+
+"HornCurr",
+"Horn1_x",
+"Horn1_y",
+"Beam_spot",
+"Horn2_x",
+"Horn2_y",
+"Horns_water",
+"Beam_shift_x",
+"Beam_shift_y",
+"Target_z",
+
   };
   for ( unsigned i = 0; i < nPCs; i++ ) knobs.push_back( "flux_PCA_" + std::to_string(i) );
   knobs.push_back("flux_stat");
