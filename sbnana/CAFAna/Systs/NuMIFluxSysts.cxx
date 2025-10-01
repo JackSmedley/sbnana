@@ -353,20 +353,6 @@ namespace ana {
 
               if (signIdx == 1) hName += "bar";
 
-              // TODO
-              // 05/28/2025 JK) Type in current file
-              if(fName=="Horn1_x" && sigmaIdx==1){
-                hName = "";
-                std::string tmp_ShiftHistName = "hsyst_beam_Horm1_x_m3mm";
-                if(hcIdx==0) hName = "beam_focusing_uncertainties/fhc/"+tmp_ShiftHistName+"_fhc";
-                else         hName = "beam_focusing_uncertainties/rhc/"+tmp_ShiftHistName+"_rhc";
-
-                if(flavIdx==0) hName += "_nue";
-                else           hName += "_numu";
-
-                if (signIdx == 1) hName += "bar";                
-              }
-
               TH1* h = (TH1*)f.Get(hName.c_str());
               if (!h) {
                 std::cout << "NuMIBeamShiftSyst: failed to find " << hName << " in " << f.GetName()
