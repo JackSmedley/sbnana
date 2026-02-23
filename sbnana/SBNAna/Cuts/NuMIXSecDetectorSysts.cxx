@@ -149,4 +149,10 @@ namespace ana {
     "Electron lifetime 9.2ms"
   );
 
+  const NuMIXSecDetectorSysts kNuMIXSecProtonEffSyst(
+    NuMIXSecDetectorSysts::kMiddleIndPlaneTransparency,
+    "NuMIXSecProtonEffSyst",
+    "Addtional proton efficiency uncertainty"
+  );
+
 } // end namespace ana

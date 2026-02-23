@@ -71,5 +71,6 @@ namespace ana
   extern const NuMIXSecDetectorSysts kNuMIXSecMiddleIndPlaneTransparencySyst;
   extern const NuMIXSecDetectorSysts kNuMIXSecCaloGainSyst;
   extern const NuMIXSecDetectorSysts kNuMIXSecElectronLifetimeSyst;
+  extern const NuMIXSecDetectorSysts kNuMIXSecProtonEffSyst;
 
 }
