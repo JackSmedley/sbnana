@@ -119,50 +119,96 @@ const Var kIsRHC([](const caf::SRSliceProxy* slc) -> int {
   return 0;
   });
 
-bool isInFV (double x, double y, double z)
+bool isInTPCEEBadRegion(double x, double y, double z)
 {
   if ( std::isnan(x) || std::isnan(y) || std::isnan(z) ) return false;
 
-  return (( ( x < -61.94 - 25 && x > -358.49 + 25 ) ||
-	          ( x >  61.94 + 25 && x <  358.49 - 25 )) &&
-	        (( y > -181.86 + 25 && y < 134.96 - 25 ) &&
-	         ( z > -894.95 + 30 && z < 894.95 - 50 ) ));
+  double x_cath = -1.* (358.49+61.94)/2.;
+
+  bool x_isEE = (x > -358.49) && (x < x_cath);
+  bool isBad = (y>115) || (y<-161.86);
+
+  return (x_isEE && isBad);
+
+}
+
+bool isInTPCWWBadRegion(double x, double y, double z)
+{
+  if ( std::isnan(x) || std::isnan(y) || std::isnan(z) ) return false;
+
+  double x_cath = (358.49+61.94)/2.;
+
+  bool x_isWW = (x > x_cath) && (x < 358.49);
+  bool isBad = (y>70) && (z>0);
+
+  return (x_isWW && isBad);
+
+}
+
+bool isInAV (double x, double y, double z, bool RejectBad)
+{
+  if ( std::isnan(x) || std::isnan(y) || std::isnan(z) ) return false;
+
+  bool PassBase = (( ( x < -61.94 && x > -358.49 ) ||
+            ( x >  61.94 && x <  358.49 )) &&
+          ( ( y > -181.86 && y < 134.96 ) &&
+            ( z > -894.95 && z < 894.95 ) ));
+
+  bool IsBad = isInTPCEEBadRegion(x,y,z) || isInTPCWWBadRegion(x,y,z);
+
+  if(RejectBad) return PassBase && !IsBad;
+  else return PassBase;
+
+}
+
+bool isInFV (double x, double y, double z, bool RejectBad)
+{
+  if ( std::isnan(x) || std::isnan(y) || std::isnan(z) ) return false;
+
+  bool PassBase = (( ( x < -61.94 - 25 && x > -358.49 + 25 ) ||
+            ( x >  61.94 + 25 && x <  358.49 - 25 )) &&
+          ( ( y > -181.86 + 25 && y < 134.96 - 25 ) &&
+            ( z > -894.95 + 30 && z < 894.95 - 50 ) ));
+
+  bool IsBad = isInTPCEEBadRegion(x,y,z) || isInTPCWWBadRegion(x,y,z);
+
+  if(RejectBad) return PassBase && !IsBad;
+  else return PassBase;
+
+}
+
+bool isContainedVol (double x, double y, double z, bool RejectBad)
+{
+  if ( std::isnan(x) || std::isnan(y) || std::isnan(z) ) return false;
+
+  bool PassBase = (( ( x < -61.94 - 10. && x > -358.49 + 10. ) ||
+            ( x >  61.94 + 10. && x <  358.49 - 10. )) &&
+          ( ( y > -181.86 + 10. && y < 134.96 - 10. ) &&
+            ( z > -894.95 + 10. && z < 894.95 - 10. ) ));
+
+  bool IsBad = isInTPCEEBadRegion(x,y,z) || isInTPCWWBadRegion(x,y,z);
+
+  if(RejectBad) return PassBase && !IsBad;
+  else return PassBase;
+
 }
 
 const Cut isInFV_Vtx([](const caf::SRSliceProxy* sr)
 		     {
 		       const auto& vtx = sr->truth.position;
-
-		       if ( std::isnan(vtx.x) || std::isnan(vtx.y) || std::isnan(vtx.z) ) return false;
-
-		       return (( ( vtx.x < -61.94 - 25 && vtx.x > -358.49 + 25 ) ||
-				             ( vtx.x >  61.94 + 25 && vtx.x <  358.49 - 25 )) &&
-			             (( vtx.y > -181.86 + 25 && vtx.y < 134.96 - 25 ) &&
-				            ( vtx.z > -894.95 + 30 && vtx.z < 894.95 - 50 ) ));
+                       return isInFV(vtx.x, vtx.y, vtx.z, true);
 		     });
 
 const Cut isInAV_Vtx([](const caf::SRSliceProxy* sr)
                      {
                        const auto& vtx = sr->truth.position;
-
-                       if ( std::isnan(vtx.x) || std::isnan(vtx.y) || std::isnan(vtx.z) ) return false;
-
-                       return (( ( vtx.x < -61.94 && vtx.x > -358.49 ) ||
-                                 ( vtx.x >  61.94 && vtx.x <  358.49 )) &&
-                               (( vtx.y > -181.86 && vtx.y < 134.96 ) &&
-                                ( vtx.z > -894.95 && vtx.z < 894.95 ) ));
+                       return isInAV(vtx.x, vtx.y, vtx.z, true);
                      });
 
 const Cut kFV([](const caf::SRSliceProxy* sr)
                      {
                        const auto& vtx = sr->vertex;
-
-                       if ( std::isnan(vtx.x) || std::isnan(vtx.y) || std::isnan(vtx.z) ) return false;
-
-                       return (( ( vtx.x < -61.94 - 25 && vtx.x > -358.49 + 25 ) ||
-                                             ( vtx.x >  61.94 + 25 && vtx.x <  358.49 - 25 )) &&
-                                     (( vtx.y > -181.86 + 25 && vtx.y < 134.96 - 25 ) &&
-                                            ( vtx.z > -894.95 + 30 && vtx.z < 894.95 - 50 ) ));
+                       return isInFV(vtx.x, vtx.y, vtx.z, true);
                      });
 
 /////////////////////////////////////////////////
@@ -206,13 +252,7 @@ const Var kRecoMuonIdx([](const caf::SRSliceProxy* slc) -> int {
         const float Chi2Proton = trk.chi2pid[2].chi2_proton;
         const float Chi2Muon = trk.chi2pid[2].chi2_muon;
 
-        const bool Contained = (!isnan(trk.end.x) &&
-                                ((trk.end.x < -61.94 - 10 && trk.end.x > -358.49 + 10) ||
-                                 (trk.end.x >  61.94 + 10 && trk.end.x <  358.49 - 10)) &&
-                                !isnan(trk.end.y) &&
-                                ( trk.end.y > -181.86 + 10 && trk.end.y < 134.96 - 10 ) &&
-                                !isnan(trk.end.z) &&
-                                ( trk.end.z > -894.95 + 10 && trk.end.z < 894.95 - 10 ) );
+        const bool Contained = isContainedVol(trk.end.x, trk.end.y, trk.end.z, true);
         const bool MaybeMuonExiting = ( !Contained && trk.len > 50);
         const bool MaybeMuonContained = ( Contained && Chi2Proton > 60 && Chi2Muon < 30 && trk.len > 50 );
         if ( AtSlice && ( MaybeMuonExiting || MaybeMuonContained ) && trk.len > Longest )
@@ -234,13 +274,7 @@ const Var kRecoMuonP([](const caf::SRSliceProxy* slc) -> float {
     if ( kRecoMuonIdx(slc) >= 0 )
       {
         auto const& trk = slc->reco.pfp.at(kRecoMuonIdx(slc)).trk;
-        const bool Contained = ( !isnan(trk.end.x) &&
-				                         ((trk.end.x < -61.94 - 10 && trk.end.x > -358.49 + 10) ||
-				                          (trk.end.x >  61.94 + 10 && trk.end.x <  358.49 - 10)) &&
-                                 !isnan(trk.end.y) &&
-                                 ( trk.end.y > -181.86 + 10 && trk.end.y < 134.96 - 10 ) &&
-                                 !isnan(trk.end.z) &&
-                                 ( trk.end.z > -894.95 + 10 && trk.end.z < 894.95 - 10 ) );
+        const bool Contained = isContainedVol(trk.end.x, trk.end.y, trk.end.z, true);
         if(Contained) p = trk.rangeP.p_muon;
         else p = trk.mcsP.fwdP_muon;
         if ( isnan(p) || p < 0.) std::cout << "NaN muon momentum! Contained?: " << Contained << ", track start: ("
@@ -253,15 +287,8 @@ const Cut kRecoMuonContained([](const caf::SRSliceProxy* slc) {
     if ( kRecoMuonIdx(slc) >= 0 )
       {
         auto const& trk = slc->reco.pfp.at(kRecoMuonIdx(slc)).trk;
-        const bool Contained = ( !isnan(trk.end.x) &&
-                                 ((trk.end.x < -61.94 - 10 && trk.end.x > -358.49 + 10) ||
-                                  (trk.end.x >  61.94 + 10 && trk.end.x <  358.49 - 10)) &&
-                                 !isnan(trk.end.y) &&
-                                 ( trk.end.y > -181.86 + 10 && trk.end.y < 134.96 - 10 ) &&
-                                 !isnan(trk.end.z) &&
-                                 ( trk.end.z > -894.95 + 10 && trk.end.z < 894.95 - 10 ) );
-        if(Contained) return true;
-        else return false;
+        const bool Contained = isContainedVol(trk.end.x, trk.end.y, trk.end.z, true);
+        return Contained;
       }
     return false;
   });
@@ -284,13 +311,7 @@ const Var kRecoProtonIdx([](const caf::SRSliceProxy* slc) -> int {
       const float Atslc = std::hypot(slc->vertex.x - trk.start.x,
                                      slc->vertex.y - trk.start.y,
                                      slc->vertex.z - trk.start.z);
-      const bool Contained = ( !isnan(trk.end.x) &&
-                               ((trk.end.x < -61.94 - 10 && trk.end.x > -358.49 + 10) ||
-                                (trk.end.x >  61.94 + 10 && trk.end.x <  358.49 - 10)) &&
-                               !isnan(trk.end.y) &&
-                               ( trk.end.y > -181.86 + 10 && trk.end.y < 134.96 - 10 ) &&
-                               !isnan(trk.end.z) &&
-                               ( trk.end.z > -894.95 + 10 && trk.end.z < 894.95 - 10 ) );
+      const bool Contained = isContainedVol(trk.end.x, trk.end.y, trk.end.z, true);
 
       const float Chi2Proton = trk.chi2pid[2].chi2_proton;
       const float Chi2Muon = trk.chi2pid[2].chi2_muon;
@@ -323,13 +344,7 @@ const Var kRecoProtonP([](const caf::SRSliceProxy* slc) -> float {
     if ( kRecoProtonIdx(slc) >= 0 )
     {
         auto const& trk = slc->reco.pfp.at(kRecoProtonIdx(slc)).trk;
-        const bool Contained = ( !isnan(trk.end.x) &&
-                                 ((trk.end.x < -61.94 - 10 && trk.end.x > -358.49 + 10) ||
-                                  (trk.end.x >  61.94 + 10 && trk.end.x <  358.49 - 10)) &&
-                                 !isnan(trk.end.y) &&
-                                 ( trk.end.y > -181.86 + 10 && trk.end.y < 134.96 - 10 ) &&
-                                 !isnan(trk.end.z) &&
-                                 ( trk.end.z > -894.95 + 10 && trk.end.z < 894.95 - 10 ) );
+        const bool Contained = isContainedVol(trk.end.x, trk.end.y, trk.end.z, true);
         if(Contained) p = trk.rangeP.p_proton;
         else {
 	        std::cout << "Currently kRecoProtonIdx requires a contained proton... Why am I trying to use MCS here??" << std::endl;
@@ -445,13 +460,7 @@ const Cut kHasScdyPionTrack([](const caf::SRSliceProxy* slc) {
       const float Atslc = std::hypot(slc->vertex.x - trk.start.x,
                                      slc->vertex.y - trk.start.y,
                                      slc->vertex.z - trk.start.z);
-      const bool Contained = ( !isnan(trk.end.x) &&
-                               ((trk.end.x < -61.94 - 10 && trk.end.x > -358.49 + 10) ||
-                                (trk.end.x >  61.94 + 10 && trk.end.x <  358.49 - 10)) &&
-                               !isnan(trk.end.y) &&
-                               ( trk.end.y > -181.86 + 10 && trk.end.y < 134.96 - 10 ) &&
-                               !isnan(trk.end.z) &&
-                               ( trk.end.z > -894.95 + 10 && trk.end.z < 894.95 - 10 ) );
+      const bool Contained = isContainedVol(trk.end.x, trk.end.y, trk.end.z, true);
 
       // Add Chi2:
       const float Chi2Proton = trk.chi2pid[trk.bestplane].chi2_proton;
@@ -1151,13 +1160,7 @@ const Var kScndProtonIdx([](const caf::SRSliceProxy* slc) -> float {
                                    slc->vertex.y - trk.start.y,
                                    slc->vertex.z - trk.start.z);
 
-    const bool Contained = (!isnan(trk.end.x) &&
-                            ((trk.end.x < -61.94 - 10 && trk.end.x > -358.49 + 10) ||
-                                (trk.end.x >  61.94 + 10 && trk.end.x <  358.49 - 10)) &&
-                            !isnan(trk.end.y) &&
-                            ( trk.end.y > -181.86 + 10 && trk.end.y < 134.96 - 10 ) &&
-                            !isnan(trk.end.z) &&
-                            ( trk.end.z > -894.95 + 10 && trk.end.z < 894.95 - 10 ) );
+    const bool Contained = isContainedVol(trk.end.x, trk.end.y, trk.end.z, true);
 
     const bool AtSlice = ( Atslc < 10.0 && slc->reco.pfp.at(idxTrk).parent_is_primary);
     const bool chi2PID = ( trk.chi2pid[2].chi2_proton < 50. && trk.chi2pid[2].chi2_muon != 0. );
@@ -1201,12 +1204,7 @@ const MultiVar kRecoProtonIndices([](const caf::SRSliceProxy* slc) {
     if ( !pfp.parent_is_primary ) continue;
     if ( isnan(pfp.trk.start.x) || isnan(pfp.trk.start.y) || isnan(pfp.trk.start.z) || isnan(pfp.trk.end.x) || isnan(pfp.trk.end.y) || isnan(pfp.trk.end.z) ) continue;
 
-    bool contained = (
-                       ((pfp.trk.end.x < -61.94 - 10 && pfp.trk.end.x > -358.49 + 10) ||
-                         (pfp.trk.end.x >  61.94 + 10 && pfp.trk.end.x <  358.49 - 10)) &&
-                       ( pfp.trk.end.y > -181.86 + 10 && pfp.trk.end.y < 134.96 - 10 ) &&
-                       ( pfp.trk.end.z > -894.95 + 10 && pfp.trk.end.z < 894.95 - 10 )
-                     );
+    bool contained = isContainedVol(pfp.trk.end.x, pfp.trk.end.y, pfp.trk.end.z, true);
 
     double atslc = std::hypot(slc->vertex.x - pfp.trk.start.x,
                                 slc->vertex.y - pfp.trk.start.y,
@@ -1316,15 +1314,8 @@ const Var kSidebandPion([](const caf::SRSliceProxy* slc) -> int {
         
         const float Chi2Proton = trk.chi2pid[2].chi2_proton;
         const float Chi2Muon = trk.chi2pid[2].chi2_muon;
-        
-        const bool Contained = (!isnan(trk.end.x) && 
-                                ((trk.end.x < -61.94 - 10 && trk.end.x > -358.49 + 10) ||
-                                 (trk.end.x >  61.94 + 10 && trk.end.x <  358.49 - 10)) &&
-                                !isnan(trk.end.y) &&
-                                ( trk.end.y > -181.86 + 10 && trk.end.y < 134.96 - 10 ) &&
-                                !isnan(trk.end.z) &&
-                                ( trk.end.z > -894.95 + 10 && trk.end.z < 894.95 - 10 ) );
-        //const bool MaybeMuonExiting = ( !Contained && trk.len > 50);
+
+        const bool Contained = isContainedVol(trk.end.x, trk.end.y, trk.end.z, true);        
         const bool MaybeMuonContained = ( Contained && Chi2Proton > 60 && Chi2Muon < 30 && trk.len > lengthReq );
         if ( AtSlice && MaybeMuonContained && trk.len > Longest )
           {     
@@ -1339,13 +1330,7 @@ const Cut kThirdRENAMEIFNEEDEDPrimaryContainedTruth([](const caf::SRSliceProxy* 
   bool Contained = false;
   if ( kScndProtonIdx(slc) >= 0 ) {
     const auto &trueParticle = slc->reco.pfp.at(kScndProtonIdx(slc)).trk.truth.p;
-    Contained = (!isnan(trueParticle.end.x) &&
-                            ((trueParticle.end.x < -61.94 - 10 && trueParticle.end.x > -358.49 + 10) ||
-                                (trueParticle.end.x >  61.94 + 10 && trueParticle.end.x <  358.49 - 10)) &&
-                            !isnan(trueParticle.end.y) &&
-                            ( trueParticle.end.y > -181.86 + 10 && trueParticle.end.y < 134.96 - 10 ) &&
-                            !isnan(trueParticle.end.z) &&
-                            ( trueParticle.end.z > -894.95 + 10 && trueParticle.end.z < 894.95 - 10 ) );
+    Contained = isContainedVol(trueParticle.end.x, trueParticle.end.y, trueParticle.end.z, true);
     }
   return ( Contained );
   });
@@ -1784,14 +1769,8 @@ const Var kNoExtraMIP([](const caf::SRSliceProxy* slc) -> float {
     double trackScore = pfp.trackScore;
     double chi2muon = ( !isnan(pfp.trk.chi2pid[2].chi2_muon) ) ? (double) pfp.trk.chi2pid[2].chi2_muon : -9999.;
     double chi2proton = ( !isnan(pfp.trk.chi2pid[2].chi2_proton) ) ? (double) pfp.trk.chi2pid[2].chi2_proton : -9999.;
- 
-    bool contained = (!isnan(pfp.trk.end.x) &&
-                             ((pfp.trk.end.x < -61.94 - 10 && pfp.trk.end.x > -358.49 + 10) ||
-                                 (pfp.trk.end.x >  61.94 + 10 && pfp.trk.end.x <  358.49 - 10)) &&
-                             !isnan(pfp.trk.end.y) &&
-                             ( pfp.trk.end.y > -181.86 + 10 && pfp.trk.end.y < 134.96 - 10 ) &&
-                             !isnan(pfp.trk.end.z) &&
-                             ( pfp.trk.end.z > -894.95 + 10 && pfp.trk.end.z < 894.95 - 10 ) );
+
+    bool contained = isContainedVol(pfp.trk.end.x, pfp.trk.end.y, pfp.trk.end.z, true); 
    
     if ( contained && trackLength > lengthReq && chi2muon < 30 && chi2proton > 60 && trackScore > 0.45 && AtSlice ) {//>>>
       noMIP = false;
@@ -1832,13 +1811,7 @@ const Var kExtraMIPIdx([](const caf::SRSliceProxy* slc) -> float {
     double chi2muon = ( !isnan(pfp.trk.chi2pid[2].chi2_muon) ) ? (double) pfp.trk.chi2pid[2].chi2_muon : -9999.;
     double chi2proton = ( !isnan(pfp.trk.chi2pid[2].chi2_proton) ) ? (double) pfp.trk.chi2pid[2].chi2_proton : -9999.;
 
-    bool contained = (!isnan(pfp.trk.end.x) &&
-                            ((pfp.trk.end.x < -61.94 - 10 && pfp.trk.end.x > -358.49 + 10) ||
-                                (pfp.trk.end.x >  61.94 + 10 && pfp.trk.end.x <  358.49 - 10)) &&
-                            !isnan(pfp.trk.end.y) &&
-                            ( pfp.trk.end.y > -181.86 + 10 && pfp.trk.end.y < 134.96 - 10 ) &&
-                            !isnan(pfp.trk.end.z) &&
-                            ( pfp.trk.end.z > -894.95 + 10 && pfp.trk.end.z < 894.95 - 10 ) );
+    bool contained = isContainedVol(pfp.trk.end.x, pfp.trk.end.y, pfp.trk.end.z, true);
 
     if ( contained && trackLength > lengthReq && chi2muon < 30 && chi2proton > 60 && trackScore > 0.45 ) {
       idx = i;
@@ -1875,13 +1848,7 @@ const Var kNoExtraMIPPrimariesOnly([](const caf::SRSliceProxy* slc) -> float {
     double chi2muon = ( !isnan(pfp.trk.chi2pid[2].chi2_muon) ) ? (double) pfp.trk.chi2pid[2].chi2_muon : -9999.;
     double chi2proton = ( !isnan(pfp.trk.chi2pid[2].chi2_proton) ) ? (double) pfp.trk.chi2pid[2].chi2_proton : -9999.;
 
-    bool contained = (!isnan(pfp.trk.end.x) &&
-                            ((pfp.trk.end.x < -61.94 - 10 && pfp.trk.end.x > -358.49 + 10) ||
-                                (pfp.trk.end.x >  61.94 + 10 && pfp.trk.end.x <  358.49 - 10)) &&
-                            !isnan(pfp.trk.end.y) &&
-                            ( pfp.trk.end.y > -181.86 + 10 && pfp.trk.end.y < 134.96 - 10 ) &&
-                            !isnan(pfp.trk.end.z) &&
-                            ( pfp.trk.end.z > -894.95 + 10 && pfp.trk.end.z < 894.95 - 10 ) );
+    bool contained = isContainedVol(pfp.trk.end.x, pfp.trk.end.y, pfp.trk.end.z, true);
 
     if ( contained && trackLength > lengthReq && chi2muon < 30 && chi2proton > 60 && trackScore > 0.45 ) {
       noMIP = false;
@@ -2034,22 +2001,12 @@ const Cut kHadronicContainment([](const caf::SRSliceProxy* slc) {
     if ( std::min(trkStartDiff, shwStartDiff) < 5. ) continue;
 
     if ( !isnan(pfp.trk.end.x) && !isnan(pfp.trk.end.y) && !isnan(pfp.trk.end.z) ) {
-      contained = (
-                    ((pfp.trk.end.x < -61.94 - 10 && pfp.trk.end.x > -358.49 + 10) ||
-                      (pfp.trk.end.x >  61.94 + 10 && pfp.trk.end.x <  358.49 - 10)) &&
-                    ( pfp.trk.end.y > -181.86 + 10 && pfp.trk.end.y < 134.96 - 10 ) &&
-                    ( pfp.trk.end.z > -894.95 + 10 && pfp.trk.end.z < 894.95 - 10 )
-                  );
+      contained = isContainedVol(pfp.trk.end.x, pfp.trk.end.y, pfp.trk.end.z, true);
       if ( !contained ) break;
     }
 
     if ( !isnan(pfp.shw.end.x) && !isnan(pfp.shw.end.y) && !isnan(pfp.shw.end.z) ) {
-      contained = (
-                    ((pfp.shw.end.x < -61.94 - 10 && pfp.shw.end.x > -358.49 + 10) ||
-                      (pfp.shw.end.x >  61.94 + 10 && pfp.shw.end.x <  358.49 - 10)) &&
-                    ( pfp.shw.end.y > -181.86 + 10 && pfp.shw.end.y < 134.96 - 10 ) &&
-                    ( pfp.shw.end.z > -894.95 + 10 && pfp.shw.end.z < 894.95 - 10 )
-                  );
+      contained = isContainedVol(pfp.shw.end.x, pfp.shw.end.y, pfp.shw.end.z, true);
       if ( !contained ) break;
     }
   }
@@ -2066,12 +2023,7 @@ const Var kHadronicContainmentPrimariesOnly([](const caf::SRSliceProxy* slc) -> 
     const auto &pfp = slc->reco.pfp.at(i);
     if ( !pfp.parent_is_primary ) continue;
     if ( !isnan(pfp.trk.end.x) && !isnan(pfp.trk.end.y) && !isnan(pfp.trk.end.x) ) {
-      contained = (
-                    ((pfp.trk.end.x < -61.94 - 10 && pfp.trk.end.x > -358.49 + 10) ||
-                      (pfp.trk.end.x >  61.94 + 10 && pfp.trk.end.x <  358.49 - 10)) &&
-                    ( pfp.trk.end.y > -181.86 + 10 && pfp.trk.end.y < 134.96 - 10 ) &&
-                    ( pfp.trk.end.z > -894.95 + 10 && pfp.trk.end.z < 894.95 - 10 )
-                  );
+      contained = isContainedVol(pfp.trk.end.x, pfp.trk.end.y, pfp.trk.end.z, true);
     }
     if ( !contained ) break;
   }
@@ -2286,13 +2238,7 @@ const Var kRecoMuonChi2Muon([](const caf::SRSliceProxy* slc) -> float {
     if ( kRecoMuonIdx(slc) >= 0 )
     {
       auto const& trk = slc->reco.pfp.at(kRecoMuonIdx(slc)).trk;
-      const bool Contained = ( !isnan(trk.end.x) &&
-                               ((trk.end.x < -61.94 - 10 && trk.end.x > -358.49 + 10) ||
-                                      (trk.end.x >  61.94 + 10 && trk.end.x <  358.49 - 10)) &&
-                               !isnan(trk.end.y) &&
-                               ( trk.end.y > -181.86 + 10 && trk.end.y < 134.96 - 10 ) &&
-                               !isnan(trk.end.z) &&
-                               ( trk.end.z > -894.95 + 10 && trk.end.z < 894.95 - 10 ) );
+      const bool Contained = isContainedVol(trk.end.x, trk.end.y, trk.end.z, true);
       if(Contained) chi2muon = trk.chi2pid[2].chi2_muon;
     }
 
@@ -2305,13 +2251,7 @@ const Var kRecoMuonChi2Proton([](const caf::SRSliceProxy* slc) -> float {
     if ( kRecoMuonIdx(slc) >= 0 )
     {
       auto const& trk = slc->reco.pfp.at(kRecoMuonIdx(slc)).trk;
-      const bool Contained = ( !isnan(trk.end.x) &&
-                               ((trk.end.x < -61.94 - 10 && trk.end.x > -358.49 + 10) ||
-                                      (trk.end.x >  61.94 + 10 && trk.end.x <  358.49 - 10)) &&
-                               !isnan(trk.end.y) &&
-                               ( trk.end.y > -181.86 + 10 && trk.end.y < 134.96 - 10 ) &&
-                               !isnan(trk.end.z) &&
-                               ( trk.end.z > -894.95 + 10 && trk.end.z < 894.95 - 10 ) );
+      const bool Contained = isContainedVol(trk.end.x, trk.end.y, trk.end.z, true);
       if(Contained) chi2proton = trk.chi2pid[2].chi2_proton;
     }
 
@@ -2324,13 +2264,7 @@ const Var kRecoMuonChi2Pion([](const caf::SRSliceProxy* slc) -> float {
     if ( kRecoMuonIdx(slc) >= 0 )
     {
       auto const& trk = slc->reco.pfp.at(kRecoMuonIdx(slc)).trk;
-      const bool Contained = ( !isnan(trk.end.x) &&
-                               ((trk.end.x < -61.94 - 10 && trk.end.x > -358.49 + 10) ||
-                                      (trk.end.x >  61.94 + 10 && trk.end.x <  358.49 - 10)) &&
-                               !isnan(trk.end.y) &&
-                               ( trk.end.y > -181.86 + 10 && trk.end.y < 134.96 - 10 ) &&
-                               !isnan(trk.end.z) &&
-                               ( trk.end.z > -894.95 + 10 && trk.end.z < 894.95 - 10 ) );
+      const bool Contained = isContainedVol(trk.end.x, trk.end.y, trk.end.z, true);
       if(Contained) chi2pion = trk.chi2pid[2].chi2_pion;
     }
 
@@ -2343,13 +2277,7 @@ const Var kRecoProtonChi2Muon([](const caf::SRSliceProxy* slc) -> float {
     if ( kRecoProtonIdx(slc) >= 0 )
     {
       auto const& trk = slc->reco.pfp.at(kRecoProtonIdx(slc)).trk;
-      const bool Contained = ( !isnan(trk.end.x) &&
-                               ((trk.end.x < -61.94 - 10 && trk.end.x > -358.49 + 10) ||
-                                      (trk.end.x >  61.94 + 10 && trk.end.x <  358.49 - 10)) &&
-                               !isnan(trk.end.y) &&
-                               ( trk.end.y > -181.86 + 10 && trk.end.y < 134.96 - 10 ) &&
-                               !isnan(trk.end.z) &&
-                               ( trk.end.z > -894.95 + 10 && trk.end.z < 894.95 - 10 ) );
+      const bool Contained = isContainedVol(trk.end.x, trk.end.y, trk.end.z, true);
       if(Contained) chi2muon = trk.chi2pid[2].chi2_muon;
     }
 
@@ -2362,13 +2290,7 @@ const Var kRecoProtonChi2Proton([](const caf::SRSliceProxy* slc) -> float {
     if ( kRecoProtonIdx(slc) >= 0 )
     {
       auto const& trk = slc->reco.pfp.at(kRecoProtonIdx(slc)).trk;
-      const bool Contained = ( !isnan(trk.end.x) &&
-                               ((trk.end.x < -61.94 - 10 && trk.end.x > -358.49 + 10) ||
-                                      (trk.end.x >  61.94 + 10 && trk.end.x <  358.49 - 10)) &&
-                               !isnan(trk.end.y) &&
-                               ( trk.end.y > -181.86 + 10 && trk.end.y < 134.96 - 10 ) &&
-                               !isnan(trk.end.z) &&
-                               ( trk.end.z > -894.95 + 10 && trk.end.z < 894.95 - 10 ) );
+      const bool Contained = isContainedVol(trk.end.x, trk.end.y, trk.end.z, true);
       if(Contained) chi2proton = trk.chi2pid[2].chi2_proton;
     }
 
@@ -2381,13 +2303,7 @@ const Var kRecoProtonChi2Pion([](const caf::SRSliceProxy* slc) -> float {
     if ( kRecoProtonIdx(slc) >= 0 )
     {
       auto const& trk = slc->reco.pfp.at(kRecoProtonIdx(slc)).trk;
-      const bool Contained = ( !isnan(trk.end.x) &&
-                               ((trk.end.x < -61.94 - 10 && trk.end.x > -358.49 + 10) ||
-                                      (trk.end.x >  61.94 + 10 && trk.end.x <  358.49 - 10)) &&
-                               !isnan(trk.end.y) &&
-                               ( trk.end.y > -181.86 + 10 && trk.end.y < 134.96 - 10 ) &&
-                               !isnan(trk.end.z) &&
-                               ( trk.end.z > -894.95 + 10 && trk.end.z < 894.95 - 10 ) );
+      const bool Contained = isContainedVol(trk.end.x, trk.end.y, trk.end.z, true);
       if(Contained) chi2pion = trk.chi2pid[2].chi2_pion;
     }
 
@@ -2400,13 +2316,7 @@ const Var kScndProtonChi2Muon([](const caf::SRSliceProxy* slc) -> float {
     if ( kScndProtonIdx(slc) >= 0 )
     {
       auto const& trk = slc->reco.pfp.at(kScndProtonIdx(slc)).trk;
-      const bool Contained = ( !isnan(trk.end.x) &&
-                               ((trk.end.x < -61.94 - 10 && trk.end.x > -358.49 + 10) ||
-                                      (trk.end.x >  61.94 + 10 && trk.end.x <  358.49 - 10)) &&
-                               !isnan(trk.end.y) &&
-                               ( trk.end.y > -181.86 + 10 && trk.end.y < 134.96 - 10 ) &&
-                               !isnan(trk.end.z) &&
-                               ( trk.end.z > -894.95 + 10 && trk.end.z < 894.95 - 10 ) );
+      const bool Contained = isContainedVol(trk.end.x, trk.end.y, trk.end.z, true);
       if( Contained && !isnan(trk.chi2pid[2].chi2_muon) && trk.chi2pid[2].chi2_muon != 0 ) chi2muon = trk.chi2pid[2].chi2_muon;
     }
 
@@ -2419,13 +2329,7 @@ const Var kScndProtonChi2Proton([](const caf::SRSliceProxy* slc) -> float {
     if ( kScndProtonIdx(slc) >= 0 )
     {
       auto const& trk = slc->reco.pfp.at(kScndProtonIdx(slc)).trk;
-      const bool Contained = ( !isnan(trk.end.x) &&
-                               ((trk.end.x < -61.94 - 10 && trk.end.x > -358.49 + 10) ||
-                                      (trk.end.x >  61.94 + 10 && trk.end.x <  358.49 - 10)) &&
-                               !isnan(trk.end.y) &&
-                               ( trk.end.y > -181.86 + 10 && trk.end.y < 134.96 - 10 ) &&
-                               !isnan(trk.end.z) &&
-                               ( trk.end.z > -894.95 + 10 && trk.end.z < 894.95 - 10 ) );
+      const bool Contained = isContainedVol(trk.end.x, trk.end.y, trk.end.z, true);
       if( Contained && !isnan(trk.chi2pid[2].chi2_proton) && trk.chi2pid[2].chi2_proton != 0 ) chi2proton = trk.chi2pid[2].chi2_proton;
     }
 
@@ -2438,13 +2342,7 @@ const Var kScndProtonChi2Pion([](const caf::SRSliceProxy* slc) -> float {
     if ( kScndProtonIdx(slc) >= 0 )
     {
       auto const& trk = slc->reco.pfp.at(kScndProtonIdx(slc)).trk;
-      const bool Contained = ( !isnan(trk.end.x) &&
-                               ((trk.end.x < -61.94 - 10 && trk.end.x > -358.49 + 10) ||
-                                      (trk.end.x >  61.94 + 10 && trk.end.x <  358.49 - 10)) &&
-                               !isnan(trk.end.y) &&
-                               ( trk.end.y > -181.86 + 10 && trk.end.y < 134.96 - 10 ) &&
-                               !isnan(trk.end.z) &&
-                               ( trk.end.z > -894.95 + 10 && trk.end.z < 894.95 - 10 ) );
+      const bool Contained = isContainedVol(trk.end.x, trk.end.y, trk.end.z, true);
       if( Contained && trk.chi2pid[2].chi2_pion != 0 ) chi2pion = trk.chi2pid[2].chi2_pion;
     }
 
@@ -2457,13 +2355,7 @@ const Var kScndProtonChi2ProtonNEGATIVE([](const caf::SRSliceProxy* slc) -> floa
     if ( kScndProtonIdx(slc) >= 0 )
     {
       auto const& trk = slc->reco.pfp.at(kScndProtonIdx(slc)).trk;
-      const bool Contained = ( !isnan(trk.end.x) &&
-                               ((trk.end.x < -61.94 - 10 && trk.end.x > -358.49 + 10) ||
-                                      (trk.end.x >  61.94 + 10 && trk.end.x <  358.49 - 10)) &&
-                               !isnan(trk.end.y) &&
-                               ( trk.end.y > -181.86 + 10 && trk.end.y < 134.96 - 10 ) &&
-                               !isnan(trk.end.z) &&
-                               ( trk.end.z > -894.95 + 10 && trk.end.z < 894.95 - 10 ) );
+      const bool Contained = isContainedVol(trk.end.x, trk.end.y, trk.end.z, true);
       if( Contained && trk.chi2pid[2].chi2_proton != 0 ) chi2proton = trk.chi2pid[2].chi2_proton;
     }
 
@@ -2604,13 +2496,7 @@ const Cut kTruePiPlusUncontained([](const caf::SRSliceProxy* slc) {
   bool PDG = false;
   if ( kScndProtonIdx(slc) >= 0 ) {
     const auto &trueParticle = slc->reco.pfp.at(kScndProtonIdx(slc)).trk.truth.p;
-    Contained = (!isnan(trueParticle.end.x) &&
-                            ((trueParticle.end.x < -61.94 - 10 && trueParticle.end.x > -358.49 + 10) ||
-                                (trueParticle.end.x >  61.94 + 10 && trueParticle.end.x <  358.49 - 10)) &&
-                            !isnan(trueParticle.end.y) &&
-                            ( trueParticle.end.y > -181.86 + 10 && trueParticle.end.y < 134.96 - 10 ) &&
-                            !isnan(trueParticle.end.z) &&
-                            ( trueParticle.end.z > -894.95 + 10 && trueParticle.end.z < 894.95 - 10 ) );
+    Contained = isContainedVol(trueParticle.end.x, trueParticle.end.y, trueParticle.end.z, true);
     PDG = ( trueParticle.pdg == 211 );
     }
   return ( !Contained && PDG );
