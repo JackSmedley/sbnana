@@ -7254,7 +7254,7 @@ const TruthCut tIsSignal([](const caf::SRTrueInteractionProxy* nu) {
   if ( abs(nu->pdg) != 14 ||
        !nu->iscc ||
        std::isnan(nu->position.x) || std::isnan(nu->position.y) || std::isnan(nu->position.z) ||
-       !isInFV(nu->position.x,nu->position.y,nu->position.z) )
+       !isInFV(nu->position.x,nu->position.y,nu->position.z, true) )
     return false;
 
   unsigned int nMu(0), nP(0), nPMax(0), nPi0(0), nChgPi(0);
