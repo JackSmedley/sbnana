@@ -2111,7 +2111,7 @@ const Cut kDynamicLengthCut([](const caf::SRSliceProxy* slc) {
   return (length < 10. && length < leadingProton);
   });
 
-const Cut kScndProtonCandidate = ( kScndProtonThreshold && kHadronicContainment && !kHasSidebandPion && kDynamicLengthCut );
+const Cut kTwoPSelection = ( kScndProtonThreshold && kHadronicContainment && !kHasSidebandPion && kDynamicLengthCut );
 
 //const Cut kThreePSideband = ( kThirdRENAMEIFNEEDEDPrimaryContained && kProtonLikeTrack && kScndProtonThreshold && kThreeRecoProtons && kHasSidebandProton && kThreeRecoProtonsONLY && kContainedSidebandHadron );
 
@@ -2125,10 +2125,10 @@ const Cut kPionSidebandNp([](const caf::SRSliceProxy* slc) {
   return (kPionSidebandBase(slc) && kNRecoProtons(slc) > 1);
   });
 
-const Cut kSignalOrSideband = ( kScndProtonCandidate || kPionSideband1p || kPionSidebandNp );
+const Cut kSignalOrSideband = ( kTwoPSelection || kPionSideband1p || kPionSidebandNp );
 
 const Var kCutType([](const caf::SRSliceProxy* slc) -> int {
-  if ( kScndProtonCandidate(slc) ) return 0;
+  if ( kTwoPSelection(slc) ) return 0;
   else if ( kPionSideband1p(slc) ) return 1;
   else if ( kPionSidebandNp(slc) ) return 2;
   else return -1;
@@ -3504,7 +3504,7 @@ const Var kCCBGPrintout([](const caf::SRSliceProxy* slc) -> float {
   });
 
 const Var kPrintPrimaryPFPs([](const caf::SRSliceProxy* slc) -> float {
-    bool selected = kScndProtonCandidate(slc);
+    bool selected = kTwoPSelection(slc);
 
     std::cout << std::endl << "~~~~~~~~~~~~~~~~~ G4 Primaries";
     for ( const auto &prim : slc->truth.prim ) {
@@ -4099,7 +4099,7 @@ const Var kMuonHadronAngle([](const caf::SRSliceProxy* slc) -> float {
     unsigned int idxMuon = (unsigned int) kRecoMuonIdx(slc);
     std::vector<double> idcsHadron;
     bool usePion = false;
-    if ( kScndProtonCandidate(slc) || kPionSidebandNp(slc) ) idcsHadron = {kRecoProtonIdx(slc), kScndProtonIdx(slc)};
+    if ( kTwoPSelection(slc) || kPionSidebandNp(slc) ) idcsHadron = {kRecoProtonIdx(slc), kScndProtonIdx(slc)};
     else if ( kPionSideband1p(slc) ) {
       idcsHadron = {kRecoProtonIdx(slc), kSidebandPion(slc)};
       usePion = true;
@@ -4859,7 +4859,7 @@ const Var kLeadingProtonPFrac([](const caf::SRSliceProxy* slc) -> float {
 const Var kLeadingProtonPFracOldTruth([](const caf::SRSliceProxy* slc) -> float {
     float frac = -9999.;
 
-    //if ( !kScndProtonCandidate(slc) ) return frac;
+    //if ( !kTwoPSelection(slc) ) return frac;
 
     const auto & leadingProton = slc->reco.pfp.at(kRecoProtonIdx(slc)).trk.truth.p;
     const auto & scndProton = slc->reco.pfp.at(kScndProtonIdx(slc)).trk.truth.p;
@@ -5086,7 +5086,7 @@ const Var kEHad_Pion([](const caf::SRSliceProxy* slc) -> float {
 
 const Var kEHad([](const caf::SRSliceProxy* slc) -> float {
     double eHad = -9999.;
-    if ( kScndProtonCandidate(slc) ) eHad = kEHad_Proton(slc);
+    if ( kTwoPSelection(slc) ) eHad = kEHad_Proton(slc);
     //else if ( kThreePSideband(slc) ) eHad = kEHad_ThreeP(slc);
     else if ( kPionSidebandBase(slc) ) eHad = kEHad_Pion(slc);
     assert(((void)"No valid selection for EHad value", eHad != -9999.));
@@ -5390,7 +5390,7 @@ const Var kW_ThreeP([](const caf::SRSliceProxy* slc) -> float {
 
 const Var kW([](const caf::SRSliceProxy* slc) -> float {
     double w = -9999.;
-    if ( kScndProtonCandidate(slc) ) w = kW_Proton(slc);
+    if ( kTwoPSelection(slc) ) w = kW_Proton(slc);
     //else if ( kThreePSideband(slc) ) w = kW_ThreeP(slc);
     else if ( kPionSidebandBase(slc) ) w = kW_Pion(slc);
     assert(((void)"No valid selection for W value", w != -9999.));
@@ -5459,7 +5459,7 @@ const Var kW_ThreePTruth([](const caf::SRSliceProxy* slc) -> float {
 
 const Var kW_Truth([](const caf::SRSliceProxy* slc) -> float {
     double w = -9999.;
-    if ( kScndProtonCandidate(slc) ) w = kW_ProtonTruth(slc);
+    if ( kTwoPSelection(slc) ) w = kW_ProtonTruth(slc);
     //else if ( kThreePSideband(slc) ) w = kW_ThreePTruth(slc);
     else if ( kPionSidebandBase(slc) ) w = kW_PionTruth(slc);
     assert(((void)"No valid selection for W_Truth value", w != -9999.));
@@ -5901,7 +5901,7 @@ const Var kDeltaPT_ThreePTruth([](const caf::SRSliceProxy* slc) -> float {
 
 const Var kDeltaPT([](const caf::SRSliceProxy* slc) -> float {
     double dPT = -9999.;
-    if ( kScndProtonCandidate(slc) || kPionSidebandNp(slc) ) dPT = kDeltaPT_Proton(slc);
+    if ( kTwoPSelection(slc) || kPionSidebandNp(slc) ) dPT = kDeltaPT_Proton(slc);
     else if ( kPionSideband1p(slc) ) dPT = kDeltaPT_Pion(slc);
     assert(((void)"No valid selection for DeltaPT value", dPT != -9999.));
 
@@ -5910,7 +5910,7 @@ const Var kDeltaPT([](const caf::SRSliceProxy* slc) -> float {
 
 const Var kDeltaPT_OldTruth([](const caf::SRSliceProxy* slc) -> float {
     double dPT = -99999.; //Note the extra 9, as -9999. is a valid response for selected cosmic slices
-    if ( kScndProtonCandidate(slc) ) dPT = kDeltaPT_ProtonTruth(slc);
+    if ( kTwoPSelection(slc) ) dPT = kDeltaPT_ProtonTruth(slc);
     //else if ( kThreePSideband(slc) ) dPT = kDeltaPT_ThreePTruth(slc);
     else if ( kPionSidebandBase(slc) ) dPT = kDeltaPT_PionTruth(slc);
     assert(((void)"No valid selection for DeltaPT value", dPT != -99999.));
@@ -6303,7 +6303,7 @@ const Var kDeltaAlphaT_ThreePTruth([](const caf::SRSliceProxy* slc) -> float {
 
 const Var kDeltaAlphaT([](const caf::SRSliceProxy* slc) -> float {
     double daT = -9999.;
-    if ( kScndProtonCandidate(slc) || kPionSidebandNp(slc) ) daT = kDeltaAlphaT_Proton(slc);
+    if ( kTwoPSelection(slc) || kPionSidebandNp(slc) ) daT = kDeltaAlphaT_Proton(slc);
     //else if ( kThreePSideband(slc) ) daT = kDeltaAlphaT_ThreeP(slc);
     else if ( kPionSideband1p(slc) ) daT = kDeltaAlphaT_Pion(slc);
     assert(((void)"No valid selection for DeltaAlphaT value", daT != -9999.));
@@ -6313,7 +6313,7 @@ const Var kDeltaAlphaT([](const caf::SRSliceProxy* slc) -> float {
 
 const Var kDeltaAlphaT_OldTruth([](const caf::SRSliceProxy* slc) -> float {
     double daT = -99999.; //Note the extra 9, as -9999. is a valid response for selected cosmic slices
-    if ( kScndProtonCandidate(slc) ) daT = kDeltaAlphaT_ProtonTruth(slc);
+    if ( kTwoPSelection(slc) ) daT = kDeltaAlphaT_ProtonTruth(slc);
     //else if ( kThreePSideband(slc) ) daT = kDeltaAlphaT_ThreePTruth(slc);
     else if ( kPionSidebandBase(slc) ) daT = kDeltaAlphaT_PionTruth(slc);
     assert(((void)"No valid selection for DeltaAlphaT value", daT != -99999.));
@@ -6705,7 +6705,7 @@ const Var kDeltaPhiT_ThreePTruth([](const caf::SRSliceProxy* slc) -> float {
 
 const Var kDeltaPhiT([](const caf::SRSliceProxy* slc) -> float {
     double dphiT = -9999.;
-    if ( kScndProtonCandidate(slc) || kPionSidebandNp(slc) ) dphiT = kDeltaPhiT_Proton(slc);
+    if ( kTwoPSelection(slc) || kPionSidebandNp(slc) ) dphiT = kDeltaPhiT_Proton(slc);
     //else if ( kThreePSideband(slc) ) dphiT = kDeltaPhiT_ThreeP(slc);
     else if ( kPionSideband1p(slc) ) dphiT = kDeltaPhiT_Pion(slc);
     assert(((void)"No valid selection for DeltaPhiT value", dphiT != -9999.));
@@ -6715,7 +6715,7 @@ const Var kDeltaPhiT([](const caf::SRSliceProxy* slc) -> float {
 
 const Var kDeltaPhiT_OldTruth([](const caf::SRSliceProxy* slc) -> float {
     double dphiT = -99999.; //Note the extra 9, as -9999. is a valid response for selected cosmic slices
-    if ( kScndProtonCandidate(slc) ) dphiT = kDeltaPhiT_ProtonTruth(slc);
+    if ( kTwoPSelection(slc) ) dphiT = kDeltaPhiT_ProtonTruth(slc);
     //else if ( kThreePSideband(slc) ) dphiT = kDeltaPhiT_ThreePTruth(slc);
     else if ( kPionSidebandBase(slc) ) dphiT = kDeltaPhiT_PionTruth(slc);
     assert(((void)"No valid selection for DeltaPhiT value", dphiT != -99999.));
@@ -7091,7 +7091,7 @@ const Var kDeltaPTT_ThreePTruth([](const caf::SRSliceProxy* slc) -> float {
 
 const Var kDeltaPTT([](const caf::SRSliceProxy* slc) -> float {
     double dPTT = -9999.;
-    if ( kScndProtonCandidate(slc) || kPionSidebandNp(slc) ) dPTT = kDeltaPTT_Proton(slc);
+    if ( kTwoPSelection(slc) || kPionSidebandNp(slc) ) dPTT = kDeltaPTT_Proton(slc);
     //else if ( kThreePSideband(slc) ) dPTT = kDeltaPTT_ThreeP(slc);
     else if ( kPionSideband1p(slc) ) dPTT = kDeltaPTT_Pion(slc);
     assert(((void)"No valid selection for DeltaPTT value", dPTT != -9999.));
@@ -7101,7 +7101,7 @@ const Var kDeltaPTT([](const caf::SRSliceProxy* slc) -> float {
 
 const Var kDeltaPTT_OldTruth([](const caf::SRSliceProxy* slc) -> float {
     double dPTT = -99999.; //Note the extra 9, as -9999. is a valid response for selected cosmic slices
-    if ( kScndProtonCandidate(slc) ) dPTT = kDeltaPTT_ProtonTruth(slc);
+    if ( kTwoPSelection(slc) ) dPTT = kDeltaPTT_ProtonTruth(slc);
     //else if ( kThreePSideband(slc) ) dPTT = kDeltaPTT_ThreePTruth(slc);
     else if ( kPionSidebandBase(slc) ) dPTT = kDeltaPTT_PionTruth(slc);
     assert(((void)"No valid selection for DeltaPTT value", dPTT != -99999.));

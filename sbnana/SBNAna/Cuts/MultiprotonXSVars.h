@@ -265,7 +265,7 @@ extern const Cut kExtraPrimaryLinFitLengthCut;
 
 extern const Cut kDynamicLengthCut;
 
-extern const Cut kScndProtonCandidate;
+extern const Cut kTwoPSelection;
 
 extern const Cut kPionSidebandBase;
 
