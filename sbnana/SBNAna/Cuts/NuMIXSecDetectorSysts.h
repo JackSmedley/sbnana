@@ -48,6 +48,7 @@ namespace ana
       kCaloGain,
       kElectronLifetime,
       kSCE,
+      kProtonEff
     };
 
     NuMIXSecDetectorSysts(DetSystType detsyst_type, const std::string& name, const std::string& latexName);
