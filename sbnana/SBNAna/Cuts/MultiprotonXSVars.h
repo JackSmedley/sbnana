@@ -69,7 +69,7 @@ extern const Var kRecoMuonIdx;
 
 extern const Cut kHasMuon;
 
-extern const Var kRecoMuonPNew;
+extern const Var kRecoMuonP;
 
 extern const Cut kRecoMuonContained;
 
