@@ -839,6 +839,54 @@ namespace ana {
   }
 */
 
+  const SpillVar kNuMIVisEForTrigEff( [](const caf::SRSpillProxy *sr) -> float {
+
+    float EcryoE = 0.;
+    float EcryoW = 0.;
+
+    for ( auto const& part : sr->true_particles ) {
+      if ( part.startT >= 0. && part.startT < 10. ) {
+        // Get the true energy!
+        EcryoE += (part.plane[0][0].visE + part.plane[0][1].visE + part.plane[0][2].visE);
+        EcryoW += (part.plane[1][0].visE + part.plane[1][1].visE + part.plane[1][2].visE);
+      }
+    }
+
+    float totVisE = (EcryoE > EcryoW ? EcryoE/3. : EcryoW/3.);
+
+    return totVisE;
+
+  });
+
+  const SpillVar kNuMITrigWtRun1( [](const caf::SRSpillProxy *sr) -> float {
+
+    double totVisE = kNuMIVisEForTrigEff(sr);
+
+    float trigger_wt = 0.;
+    if ( totVisE >= 0.070 && totVisE < 0.200 ) trigger_wt = 0.402;
+    else if ( totVisE >= 0.200 && totVisE < 0.300 ) trigger_wt = 0.774;
+    else if ( totVisE >= 0.300 && totVisE < 0.400 ) trigger_wt = 0.931;
+    else if ( totVisE >= 0.400 && totVisE < 0.500 ) trigger_wt = 0.984;
+    else if ( totVisE >= 0.500 && totVisE < 0.600 ) trigger_wt = 0.967;
+    else if ( totVisE >= 0.600 ) trigger_wt = 0.986;
+    return trigger_wt;
+
+  });
+
+  const SpillVar kNuMITrigWtRun2( [](const caf::SRSpillProxy *sr) -> float {
+    
+    double totVisE = kNuMIVisEForTrigEff(sr);
+    
+    float trigger_wt = 0.;
+    if ( totVisE >= 0.070 && totVisE < 0.200 ) trigger_wt = 0.467;
+    else if ( totVisE >= 0.200 && totVisE < 0.300 ) trigger_wt = 0.828;
+    else if ( totVisE >= 0.300 && totVisE < 0.400 ) trigger_wt = 0.948;
+    else if ( totVisE >= 0.400 && totVisE < 0.500 ) trigger_wt = 0.984;
+    else if ( totVisE >= 0.500 && totVisE < 0.600 ) trigger_wt = 0.99;
+    else if ( totVisE >= 0.600 ) trigger_wt = 0.998;
+    return trigger_wt;
+
+  });
 
 } // end namespace ana#include "sbnana/SBNAna/Cuts/NuMIXSecSysts.h"
 
