@@ -43,6 +43,8 @@ extern const Var kDecayAngMEC_NaNProtected;
 
 extern const Var kTheta_Delta2Npi_NaNProtected;
 
+extern const Var kUnit;
+
 extern const Var kOne;
 
 extern const Var kZero;

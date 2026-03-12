@@ -103,6 +103,10 @@ const Var kTheta_Delta2Npi_NaNProtected([](const caf::SRSliceProxy* slc) {
   });
 
 
+const Var kUnit([](const caf::SRSliceProxy* slc) -> int {
+  return 1;
+  });
+
 const Var kOne([](const caf::SRSliceProxy* slc) -> int {
   return 1;
   });
