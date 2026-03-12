@@ -139,18 +139,18 @@ namespace ana {
     "Middle ind. plane transparency"
   );
   const NuMIXSecDetectorSysts kNuMIXSecCaloGainSyst(
-    NuMIXSecDetectorSysts::kMiddleIndPlaneTransparency,
+    NuMIXSecDetectorSysts::kCaloGain,
     "NuMIXSecCaloGainSyst",
     "Calorimetry gain"
   );
   const NuMIXSecDetectorSysts kNuMIXSecElectronLifetimeSyst(
-    NuMIXSecDetectorSysts::kMiddleIndPlaneTransparency,
+    NuMIXSecDetectorSysts::kElectronLifetime,
     "NuMIXSecElectronLifetimeSyst",
     "Electron lifetime 9.2ms"
   );
 
   const NuMIXSecDetectorSysts kNuMIXSecProtonEffSyst(
-    NuMIXSecDetectorSysts::kMiddleIndPlaneTransparency,
+    NuMIXSecDetectorSysts::kProtonEff,
     "NuMIXSecProtonEffSyst",
     "Addtional proton efficiency uncertainty"
   );
