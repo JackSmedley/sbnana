@@ -273,8 +273,9 @@ const Cut kHasMuon([](const caf::SRSliceProxy* slc) {
   });
 
 // VAR NAME 'RecoMuonP' CONFLICTS WITH OTHER DEFINITIONS IN SBNANA
+// Want a positive null value to presevere ACos in direction-related values
 const Var kRecoMuonPNew([](const caf::SRSliceProxy* slc) -> float {
-    float p(-5.f);
+    double p = 9999.;
 
     if ( kRecoMuonIdx(slc) >= 0 )
       {
@@ -282,8 +283,7 @@ const Var kRecoMuonPNew([](const caf::SRSliceProxy* slc) -> float {
         const bool Contained = isContainedVol(trk.end.x, trk.end.y, trk.end.z, true);
         if(Contained) p = trk.rangeP.p_muon;
         else p = trk.mcsP.fwdP_muon;
-        if ( isnan(p) || p < 0.) std::cout << "NaN muon momentum! Contained?: " << Contained << ", track start: ("
-            << trk.start.x << ", " << trk.start.y  << ", " << trk.start.z  << "), track end: (" <<  trk.end.x << ", " <<  trk.end.y << ", " <<  trk.end.z << ")" << std::endl;
+        if ( isnan(p) ) p = 9999.;
       }
     return p;
   });
@@ -5906,6 +5906,7 @@ const Var kDeltaPT_ThreePTruth([](const caf::SRSliceProxy* slc) -> float {
 
 const Var kDeltaPT([](const caf::SRSliceProxy* slc) -> float {
     double dPT = -9999.;
+    if ( kRecoMuonPNew(slc) == 9999.) return dPT;
     if ( kTwoPSelection(slc) || kPionSidebandNp(slc) ) dPT = kDeltaPT_Proton(slc);
     else if ( kPionSideband1p(slc) ) dPT = kDeltaPT_Pion(slc);
     assert(((void)"No valid selection for DeltaPT value", dPT != -9999.));
@@ -6308,6 +6309,7 @@ const Var kDeltaAlphaT_ThreePTruth([](const caf::SRSliceProxy* slc) -> float {
 
 const Var kDeltaAlphaT([](const caf::SRSliceProxy* slc) -> float {
     double daT = -9999.;
+    if ( kRecoMuonPNew(slc) == 9999.) return daT;
     if ( kTwoPSelection(slc) || kPionSidebandNp(slc) ) daT = kDeltaAlphaT_Proton(slc);
     //else if ( kThreePSideband(slc) ) daT = kDeltaAlphaT_ThreeP(slc);
     else if ( kPionSideband1p(slc) ) daT = kDeltaAlphaT_Pion(slc);
