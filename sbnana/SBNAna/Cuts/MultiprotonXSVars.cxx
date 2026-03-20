@@ -272,7 +272,8 @@ const Cut kHasMuon([](const caf::SRSliceProxy* slc) {
     return ( kRecoMuonIdx(slc) >= 0 );
   });
 
-const Var kRecoMuonP([](const caf::SRSliceProxy* slc) -> float {
+// VAR NAME 'RecoMuonP' CONFLICTS WITH OTHER DEFINITIONS IN SBNANA
+const Var kRecoMuonPNew([](const caf::SRSliceProxy* slc) -> float {
     float p(-5.f);
 
     if ( kRecoMuonIdx(slc) >= 0 )
@@ -1429,7 +1430,7 @@ const Var kRecoMuonPL([](const caf::SRSliceProxy* slc) -> float {
     float momentum = -9999.;
 
     if ( kRecoMuonIdx(slc) >= 0 ) {
-      double pMu_mag = kRecoMuonP(slc);
+      double pMu_mag = kRecoMuonPNew(slc);
       double costh = kRecoMuonThetaNuMI(slc);
       momentum = pMu_mag * costh;
     }
@@ -1441,7 +1442,7 @@ const Var kRecoMuonPT([](const caf::SRSliceProxy* slc) -> float {
     float momentum = -9999.;
 
     if ( kRecoMuonIdx(slc) >= 0 ) {
-      double pMu_mag = kRecoMuonP(slc);
+      double pMu_mag = kRecoMuonPNew(slc);
       double costh = kRecoMuonThetaNuMI(slc);
       double sinth = std::sqrt( 1. - costh*costh );
       momentum = pMu_mag * sinth;
@@ -4110,7 +4111,7 @@ const Var kMuonHadronAngle([](const caf::SRSliceProxy* slc) -> float {
     }
     else return costh;
 
-    double pMu_mag = kRecoMuonP(slc);
+    double pMu_mag = kRecoMuonPNew(slc);
     TVector3 pMu(pMu_mag*slc->reco.pfp.at(idxMuon).trk.dir.x, pMu_mag*slc->reco.pfp.at(idxMuon).trk.dir.y, pMu_mag*slc->reco.pfp.at(idxMuon).trk.dir.z);
 
     TVector3 thisP;
@@ -4938,14 +4939,14 @@ const Var kRecoMuonTruthP([](const caf::SRSliceProxy* slc) -> float {
   });
 
 const Var kRecoMuonPResid([](const caf::SRSliceProxy* slc) -> float {
-    double recoMomentum = kRecoMuonP(slc);
+    double recoMomentum = kRecoMuonPNew(slc);
     double trueMomentum = kRecoMuonTruthP(slc);
 
     return (recoMomentum - trueMomentum) / trueMomentum;
   });
 
 const Var kRecoMuonPInverseResid([](const caf::SRSliceProxy* slc) -> float {
-    double recoMomentum = 1. / kRecoMuonP(slc);
+    double recoMomentum = 1. / kRecoMuonPNew(slc);
     double trueMomentum = 1. / kRecoMuonTruthP(slc);
 
     return (recoMomentum - trueMomentum) / trueMomentum;
@@ -4981,12 +4982,12 @@ const Var kRecoMuonTruthDirDotRecoWide([](const caf::SRSliceProxy* slc) -> float
   });
 
 const Cut kBadMuon([](const caf::SRSliceProxy* slc) {
-  double momentum = kRecoMuonP(slc);
+  double momentum = kRecoMuonPNew(slc);
   return( isnan(momentum) || momentum < 0 );
   });
 
 const Var kPrintBadMuon([](const caf::SRSliceProxy* slc) -> float {
-  double momentum = kRecoMuonP(slc);
+  double momentum = kRecoMuonPNew(slc);
   bool contained = kRecoMuonContained(slc);
   auto const& trk = slc->reco.pfp.at(kRecoMuonIdx(slc)).trk;
 
@@ -5219,7 +5220,7 @@ const Var kQ2([](const caf::SRSliceProxy* slc) -> float {
     double eHad = kEHad(slc);
 
     unsigned int idxMuon = (unsigned int) kRecoMuonIdx(slc); 
-    double pMu_mag = kRecoMuonP(slc);
+    double pMu_mag = kRecoMuonPNew(slc);
     TVector3 pMu(pMu_mag*slc->reco.pfp.at(idxMuon).trk.dir.x, pMu_mag*slc->reco.pfp.at(idxMuon).trk.dir.y, pMu_mag*slc->reco.pfp.at(idxMuon).trk.dir.z);
 
     double eMu = std::hypot(pMu_mag, mMuon);
@@ -5317,7 +5318,7 @@ const Var kRecoENu([](const caf::SRSliceProxy* slc) -> float {
     double eHad = kEHad(slc);
 
     unsigned int idxMuon = (unsigned int) kRecoMuonIdx(slc);
-    double pMu_mag = kRecoMuonP(slc);
+    double pMu_mag = kRecoMuonPNew(slc);
     TVector3 pMu(pMu_mag*slc->reco.pfp.at(idxMuon).trk.dir.x, pMu_mag*slc->reco.pfp.at(idxMuon).trk.dir.y, pMu_mag*slc->reco.pfp.at(idxMuon).trk.dir.z);
 
     double eMu = std::hypot(pMu_mag, mMuon);
@@ -5606,7 +5607,7 @@ const Var kDeltaPT_Single([](const caf::SRSliceProxy* slc) -> float {
     unsigned int idxMuon = (unsigned int) kRecoMuonIdx(slc);
     unsigned int idxProton = (unsigned int) kRecoProtonIdx(slc); //Leading proton
 
-    double pMu_mag = kRecoMuonP(slc);
+    double pMu_mag = kRecoMuonPNew(slc);
     double pP_mag = kRecoProtonP(slc);
 
     TVector3 pMu(pMu_mag*slc->reco.pfp.at(idxMuon).trk.dir.x, pMu_mag*slc->reco.pfp.at(idxMuon).trk.dir.y, pMu_mag*slc->reco.pfp.at(idxMuon).trk.dir.z);
@@ -5633,7 +5634,7 @@ const Var kDeltaPT_Proton([](const caf::SRSliceProxy* slc) -> float {
     unsigned int idxProton = (unsigned int) kRecoProtonIdx(slc); //Leading proton
     unsigned int idxThird = (unsigned int) kScndProtonIdx(slc); //Charged pion or sub-leading proton
 
-    double pMu_mag = kRecoMuonP(slc);
+    double pMu_mag = kRecoMuonPNew(slc);
     double pP_mag = kRecoProtonP(slc);
     double pThird_mag = kScndProtonP(slc);
 
@@ -5730,7 +5731,7 @@ const Var kDeltaPT_CheatingAngles([](const caf::SRSliceProxy* slc) -> float {
     if ( kScndProtonIdx(slc) < 0 ) return dpTMag;
     unsigned int idxThird = (unsigned int) kScndProtonIdx(slc); //Charged pion or sub-leading proton
 
-    double pMu_mag = kRecoMuonP(slc);
+    double pMu_mag = kRecoMuonPNew(slc);
     double pP_mag = kRecoProtonP(slc);
     double pThird_mag = kScndProtonP(slc);
 
@@ -5764,7 +5765,7 @@ const Var kDeltaPT_Pion([](const caf::SRSliceProxy* slc) -> float {
     unsigned int idxProton = (unsigned int) kRecoProtonIdx(slc); //Leading proton
     unsigned int idxThird = (unsigned int) kSidebandPion(slc); //Charged pion or sub-leading proton
 
-    double pMu_mag = kRecoMuonP(slc);
+    double pMu_mag = kRecoMuonPNew(slc);
     double pP_mag = kRecoProtonP(slc);
     double pThird_mag = kSidebandPionP(slc);
 
@@ -5796,7 +5797,7 @@ const Var kDeltaPT_ThreeP([](const caf::SRSliceProxy* slc) -> float {
     unsigned int idxP2 = (unsigned int) kScndProtonIdx(slc); //Charged pion or sub-leading proton
     unsigned int idxP3 = (unsigned int) kSidebandProton(slc);
 
-    double pMu_mag = kRecoMuonP(slc);
+    double pMu_mag = kRecoMuonPNew(slc);
     double pP1_mag = kRecoProtonP(slc);
     double pP2_mag = kScndProtonP(slc);
     double pP3_mag = kSidebandProtonP(slc);
@@ -6042,7 +6043,7 @@ const Var kDeltaAlphaT_Single([](const caf::SRSliceProxy* slc) -> float {
     unsigned int idxMuon = (unsigned int) kRecoMuonIdx(slc);
     unsigned int idxProton = (unsigned int) kRecoProtonIdx(slc); //Leading proton
 
-    double pMu_mag = kRecoMuonP(slc);
+    double pMu_mag = kRecoMuonPNew(slc);
     double pP_mag = kRecoProtonP(slc);
 
     TVector3 pMu(pMu_mag*slc->reco.pfp.at(idxMuon).trk.dir.x, pMu_mag*slc->reco.pfp.at(idxMuon).trk.dir.y, pMu_mag*slc->reco.pfp.at(idxMuon).trk.dir.z);
@@ -6069,7 +6070,7 @@ const Var kDeltaAlphaT_Proton([](const caf::SRSliceProxy* slc) -> float {
     unsigned int idxProton = (unsigned int) kRecoProtonIdx(slc); //Leading proton
     unsigned int idxThird = (unsigned int) kScndProtonIdx(slc); //Charged pion or sub-leading proton
 
-    double pMu_mag = kRecoMuonP(slc);
+    double pMu_mag = kRecoMuonPNew(slc);
     double pP_mag = kRecoProtonP(slc);
     double pThird_mag = kScndProtonP(slc);
 
@@ -6131,7 +6132,7 @@ const Var kDeltaAlphaT_CheatingAngles([](const caf::SRSliceProxy* slc) -> float 
     if ( kScndProtonIdx(slc) < 0 ) return daT;
     unsigned int idxThird = (unsigned int) kScndProtonIdx(slc); //Charged pion or sub-leading proton
 
-    double pMu_mag = kRecoMuonP(slc);
+    double pMu_mag = kRecoMuonPNew(slc);
     double pP_mag = kRecoProtonP(slc);
     double pThird_mag = kScndProtonP(slc);
 
@@ -6166,7 +6167,7 @@ const Var kDeltaAlphaT_Pion([](const caf::SRSliceProxy* slc) -> float {
     unsigned int idxProton = (unsigned int) kRecoProtonIdx(slc); //Leading proton
     unsigned int idxThird = (unsigned int) kSidebandPion(slc); //Charged pion or sub-leading proton
 
-    double pMu_mag = kRecoMuonP(slc);
+    double pMu_mag = kRecoMuonPNew(slc);
     double pP_mag = kRecoProtonP(slc);
     double pThird_mag = kSidebandPionP(slc);
 
@@ -6198,7 +6199,7 @@ const Var kDeltaAlphaT_ThreeP([](const caf::SRSliceProxy* slc) -> float {
     unsigned int idxP2 = (unsigned int) kScndProtonIdx(slc); //Charged pion or sub-leading proton
     unsigned int idxP3 = (unsigned int) kSidebandProton(slc);
 
-    double pMu_mag = kRecoMuonP(slc);
+    double pMu_mag = kRecoMuonPNew(slc);
     double pP1_mag = kRecoProtonP(slc);
     double pP2_mag = kScndProtonP(slc);
     double pP3_mag = kSidebandProtonP(slc);
@@ -6446,7 +6447,7 @@ const Var kDeltaPhiT_Single([](const caf::SRSliceProxy* slc) -> float {
     unsigned int idxMuon = (unsigned int) kRecoMuonIdx(slc);
     unsigned int idxProton = (unsigned int) kRecoProtonIdx(slc); //Leading proton
 
-    double pMu_mag = kRecoMuonP(slc);
+    double pMu_mag = kRecoMuonPNew(slc);
     double pP_mag = kRecoProtonP(slc);
 
     TVector3 pMu(pMu_mag*slc->reco.pfp.at(idxMuon).trk.dir.x, pMu_mag*slc->reco.pfp.at(idxMuon).trk.dir.y, pMu_mag*slc->reco.pfp.at(idxMuon).trk.dir.z);
@@ -6472,7 +6473,7 @@ const Var kDeltaPhiT_Proton([](const caf::SRSliceProxy* slc) -> float {
     unsigned int idxProton = (unsigned int) kRecoProtonIdx(slc); //Leading proton
     unsigned int idxThird = (unsigned int) kScndProtonIdx(slc); //Charged pion or sub-leading proton
 
-    double pMu_mag = kRecoMuonP(slc);
+    double pMu_mag = kRecoMuonPNew(slc);
     double pP_mag = kRecoProtonP(slc);
     double pThird_mag = kScndProtonP(slc);
 
@@ -6533,7 +6534,7 @@ const Var kDeltaPhiT_CheatingAngles([](const caf::SRSliceProxy* slc) -> float {
     if ( kScndProtonIdx(slc) < 0 ) return dphiT;
     unsigned int idxThird = (unsigned int) kScndProtonIdx(slc); //Charged pion or sub-leading proton
 
-    double pMu_mag = kRecoMuonP(slc);
+    double pMu_mag = kRecoMuonPNew(slc);
     double pP_mag = kRecoProtonP(slc);
     double pThird_mag = kScndProtonP(slc);
 
@@ -6568,7 +6569,7 @@ const Var kDeltaPhiT_Pion([](const caf::SRSliceProxy* slc) -> float {
     unsigned int idxProton = (unsigned int) kRecoProtonIdx(slc); //Leading proton
     unsigned int idxThird = (unsigned int) kSidebandPion(slc); //Charged pion or sub-leading proton
 
-    double pMu_mag = kRecoMuonP(slc);
+    double pMu_mag = kRecoMuonPNew(slc);
     double pP_mag = kRecoProtonP(slc);
     double pThird_mag = kSidebandPionP(slc);
 
@@ -6600,7 +6601,7 @@ const Var kDeltaPhiT_ThreeP([](const caf::SRSliceProxy* slc) -> float {
     unsigned int idxP2 = (unsigned int) kScndProtonIdx(slc); //Charged pion or sub-leading proton
     unsigned int idxP3 = (unsigned int) kSidebandProton(slc);
 
-    double pMu_mag = kRecoMuonP(slc);
+    double pMu_mag = kRecoMuonPNew(slc);
     double pP1_mag = kRecoProtonP(slc);
     double pP2_mag = kScndProtonP(slc);
     double pP3_mag = kSidebandProtonP(slc);
@@ -6846,7 +6847,7 @@ const Var kDeltaPTT_Single([](const caf::SRSliceProxy* slc) -> float {
     unsigned int idxMuon = (unsigned int) kRecoMuonIdx(slc);
     unsigned int idxProton = (unsigned int) kRecoProtonIdx(slc); //Leading proton
 
-    double pMu_mag = kRecoMuonP(slc);
+    double pMu_mag = kRecoMuonPNew(slc);
     double pP_mag = kRecoProtonP(slc);
 
     TVector3 pMu(pMu_mag*slc->reco.pfp.at(idxMuon).trk.dir.x, pMu_mag*slc->reco.pfp.at(idxMuon).trk.dir.y, pMu_mag*slc->reco.pfp.at(idxMuon).trk.dir.z);
@@ -6871,7 +6872,7 @@ const Var kDeltaPTT_Proton([](const caf::SRSliceProxy* slc) -> float {
     unsigned int idxProton = (unsigned int) kRecoProtonIdx(slc); //Leading proton
     unsigned int idxThird = (unsigned int) kScndProtonIdx(slc); //Charged pion or sub-leading proton
 
-    double pMu_mag = kRecoMuonP(slc);
+    double pMu_mag = kRecoMuonPNew(slc);
     double pP_mag = kRecoProtonP(slc);
     double pThird_mag = kScndProtonP(slc);
 
@@ -6928,7 +6929,7 @@ const Var kDeltaPTT_CheatingAngles([](const caf::SRSliceProxy* slc) -> float {
     if ( kScndProtonIdx(slc) < 0 ) return dpTT;
     unsigned int idxThird = (unsigned int) kScndProtonIdx(slc); //Charged pion or sub-leading proton
 
-    double pMu_mag = kRecoMuonP(slc);
+    double pMu_mag = kRecoMuonPNew(slc);
     double pP_mag = kRecoProtonP(slc);
     double pThird_mag = kScndProtonP(slc);
 
@@ -6960,7 +6961,7 @@ const Var kDeltaPTT_Pion([](const caf::SRSliceProxy* slc) -> float {
     unsigned int idxProton = (unsigned int) kRecoProtonIdx(slc); //Leading proton
     unsigned int idxThird = (unsigned int) kSidebandPion(slc); //Charged pion or sub-leading proton
 
-    double pMu_mag = kRecoMuonP(slc);
+    double pMu_mag = kRecoMuonPNew(slc);
     double pP_mag = kRecoProtonP(slc);
     double pThird_mag = kSidebandPionP(slc);
 
@@ -6990,7 +6991,7 @@ const Var kDeltaPTT_ThreeP([](const caf::SRSliceProxy* slc) -> float {
     unsigned int idxP2 = (unsigned int) kScndProtonIdx(slc); //Charged pion or sub-leading proton
     unsigned int idxP3 = (unsigned int) kSidebandProton(slc);
 
-    double pMu_mag = kRecoMuonP(slc);
+    double pMu_mag = kRecoMuonPNew(slc);
     double pP1_mag = kRecoProtonP(slc);
     double pP2_mag = kScndProtonP(slc);
     double pP3_mag = kSidebandProtonP(slc);
