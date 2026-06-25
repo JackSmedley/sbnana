@@ -7839,6 +7839,56 @@ const TruthVar tAllStopping([](const caf::SRTrueInteractionProxy* nu) -> int {
   return allStopping;
   });
 
+const TruthVar tXSecShape_CCMEC_NaNProtected([](const caf::SRTrueInteractionProxy* nu) {
+  double wgt = tXSecShape_CCMEC(nu);
+  return ( wgt==TMath::Infinity() || wgt==(TMath::Infinity()*-1.) || isnan(wgt) ) ? 1.:wgt;
+  });
+
+const TruthVar tEnergyDependence_CCMEC_NaNProtected([](const caf::SRTrueInteractionProxy* nu) {
+  double wgt = tEnergyDependence_CCMEC(nu);
+  return ( wgt==TMath::Infinity() || wgt==(TMath::Infinity()*-1.) || isnan(wgt) ) ? 1.:wgt;
+  });
+
+const TruthVar tXSecShape_CCMEC_Empirical_NaNProtected([](const caf::SRTrueInteractionProxy* nu) {
+  double wgt = tXSecShape_CCMEC_Empirical(nu);
+  return ( wgt==TMath::Infinity() || wgt==(TMath::Infinity()*-1.) || isnan(wgt) ) ? 1.:wgt;
+  });
+
+const TruthVar tXSecShape_CCMEC_Martini_NaNProtected([](const caf::SRTrueInteractionProxy* nu) {
+  double wgt = tXSecShape_CCMEC_Martini(nu);
+  return ( wgt==TMath::Infinity() || wgt==(TMath::Infinity()*-1.) || isnan(wgt) ) ? 1.:wgt;
+  });
+
+const TruthVar tFSI_hN_NaNProtected([](const caf::SRTrueInteractionProxy* nu) {
+  double wgt = tFSI_hN(nu);
+  return ( wgt==TMath::Infinity() || wgt==(TMath::Infinity()*-1.) || isnan(wgt) ) ? 1.:wgt;
+  });
+
+const TruthVar tFSI_INCL_NaNProtected([](const caf::SRTrueInteractionProxy* nu) {
+  double wgt = tFSI_INCL(nu);
+  return ( wgt==TMath::Infinity() || wgt==(TMath::Infinity()*-1.) || isnan(wgt) ) ? 1.:wgt;
+  });
+
+const TruthVar tFSI_G4BC_NaNProtected([](const caf::SRTrueInteractionProxy* nu) {
+  double wgt = tFSI_G4BC(nu);
+  return ( wgt==TMath::Infinity() || wgt==(TMath::Infinity()*-1.) || isnan(wgt) ) ? 1.:wgt;
+  });
+
+const TruthVar tLQCDZExpFit_NaNProtected([](const caf::SRTrueInteractionProxy* nu) {
+  double wgt = tFSI_G4BC(nu);
+  return ( wgt==TMath::Infinity() || wgt==(TMath::Infinity()*-1.) || isnan(wgt) ) ? 1.:wgt;
+  });
+
+const TruthVar tDecayAngMEC_NaNProtected([](const caf::SRTrueInteractionProxy* nu) {
+  double wgt = tDecayAngMEC(nu);
+  return ( wgt==TMath::Infinity() || wgt==(TMath::Infinity()*-1.) || isnan(wgt) ) ? 1.:wgt;
+  });
+
+const TruthVar tTheta_Delta2Npi_NaNProtected([](const caf::SRTrueInteractionProxy* nu) {
+  double wgt = tTheta_Delta2Npi(nu);
+  return ( wgt==TMath::Infinity() || wgt==(TMath::Infinity()*-1.) || isnan(wgt) ) ? 1.:wgt;
+  });
+
 /*
 bool cutPreselection(const caf::SRSliceProxy &slc) { return (kPreselection(&slc)); }
 bool cutMuon(const caf::SRSliceProxy &slc) { return (kPreselection(&slc) && kHasMuon(&slc)); }

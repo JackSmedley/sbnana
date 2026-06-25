@@ -988,6 +988,26 @@ extern const TruthVar tStopping;
 
 extern const TruthVar tAllStopping;
 
+extern const TruthVar tXSecShape_CCMEC_NaNProtected;
+
+extern const TruthVar tEnergyDependence_CCMEC_NaNProtected;
+
+extern const TruthVar tXSecShape_CCMEC_Empirical_NaNProtected;
+
+extern const TruthVar tXSecShape_CCMEC_Martini_NaNProtected;
+
+extern const TruthVar tFSI_hN_NaNProtected;
+
+extern const TruthVar tFSI_INCL_NaNProtected;
+
+extern const TruthVar tFSI_G4BC_NaNProtected;
+
+extern const TruthVar tLQCDZExpFit_NaNProtected;
+
+extern const TruthVar tDecayAngMEC_NaNProtected;
+
+extern const TruthVar tTheta_Delta2Npi_NaNProtected;
+
 extern const Var kCategory;
 
 extern const Var kClassLabel;

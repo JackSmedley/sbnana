@@ -32,6 +32,26 @@ namespace ana {
   const Var kTheta_Delta2Npi = GetUniverseWeight("GENIEReWeight_ICARUS_v2_multisigma_Theta_Delta2Npi", 1);
 
 
+  // - TruthVar copies
+
+  // - 2p2h
+  const TruthVar tXSecShape_CCMEC = GetTruthUniverseWeight("GENIEReWeight_SBNNuSyst_GENIE_multisigma_XSecShape_CCMEC", 1);
+  const TruthVar tEnergyDependence_CCMEC = GetTruthUniverseWeight("GENIEReWeight_SBNNuSyst_GENIE_multisigma_EnergyDependence_CCMEC", 1);
+  const TruthVar tXSecShape_CCMEC_Empirical = GetTruthUniverseWeight("GENIEReWeight_SBNNuSyst_GENIE_multisigma_XSecShape_CCMEC_Empirical", 1);
+  const TruthVar tXSecShape_CCMEC_Martini = GetTruthUniverseWeight("GENIEReWeight_SBNNuSyst_GENIE_multisigma_XSecShape_CCMEC_Martini", 1);
+
+  // - FSI
+  const TruthVar tFSI_hN = GetTruthUniverseWeight("FSIReweight_SBNNuSyst_FSI_hNReweight_multisigma_FSIReweight", 1);
+  const TruthVar tFSI_INCL = GetTruthUniverseWeight("FSIReweight_SBNNuSyst_FSI_INCLReweight_multisigma_FSIReweight", 1);
+  const TruthVar tFSI_G4BC = GetTruthUniverseWeight("FSIReweight_SBNNuSyst_FSI_G4BCReweight_multisigma_FSIReweight", 1);
+  // - LQCD Zexp
+  const TruthVar tLQCDZExpFit = GetTruthUniverseWeight("GENIEReWeight_SBNNuSyst_LQCDZExpFit_multisim_ZExpAVariationResponse", 1);
+
+  // - Potentially degernate tnobs
+  const TruthVar tDecayAngMEC = GetTruthUniverseWeight("GENIEReWeight_ICARUS_v2_multisigma_DecayAngMEC", 1);
+  const TruthVar tTheta_Delta2Npi = GetTruthUniverseWeight("GENIEReWeight_ICARUS_v2_multisigma_Theta_Delta2Npi", 1);
+
+
   //---------------------------------------------------------------------
   // Functions copied from includes that I didn't pull in...
 

@@ -29,6 +29,24 @@ namespace ana
   extern const Var kDecayAngMEC;
   extern const Var kTheta_Delta2Npi;
 
+  // - TruthVar copies
+
+  // - 2p2h
+  extern const TruthVar tXSecShape_CCMEC;
+  extern const TruthVar tEnergyDependence_CCMEC;
+  extern const TruthVar tXSecShape_CCMEC_Empirical;
+  extern const TruthVar tXSecShape_CCMEC_Martini;
+  // - FSI
+  extern const TruthVar tFSI_hN;
+  extern const TruthVar tFSI_INCL;
+  extern const TruthVar tFSI_G4BC;
+  // - LQCD Zexp
+  extern const TruthVar tLQCDZExpFit;
+
+  // - Potentially degernate tnobs
+  extern const TruthVar tDecayAngMEC;
+  extern const TruthVar tTheta_Delta2Npi;
+
   //---------------------------------------------------------------------
   // Single-pion production CV correction and systematics
 
